@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 rpm包管理器Centos 系统上使用rpm命令管理程序包，存在包依赖问题 功能：  安装 卸载 升级 查询 校验 数据库维护  1.1 安装格式： 1rpm &amp;#123; -i | --install &amp;#125;  ”安装选项“   包名称  选项： 123-i: install 安装-v: verbose 安装过程细节显示-h: 以#显示程序包管理执行进度  常用组合： 1rpm -iv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件管理">
+<meta property="og:url" content="http://example.com/2023/07/30/%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="5-12 23:30">
+<meta property="og:description" content="1 rpm包管理器Centos 系统上使用rpm命令管理程序包，存在包依赖问题 功能：  安装 卸载 升级 查询 校验 数据库维护  1.1 安装格式： 1rpm &amp;#123; -i | --install &amp;#125;  ”安装选项“   包名称  选项： 123-i: install 安装-v: verbose 安装过程细节显示-h: 以#显示程序包管理执行进度  常用组合： 1rpm -iv">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/07/30/%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/image-20230726223314137.png">
+<meta property="og:image" content="http://example.com/2023/07/30/%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/image-20230726234925724.png">
+<meta property="article:published_time" content="2023-07-30T22:08:20.000Z">
+<meta property="article:modified_time" content="2023-11-21T13:07:39.288Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/07/30/%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/image-20230726223314137.png">
+  
+  
+  <title>软件管理 - 5-12 23:30</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="软件管理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-30 22:08" pubdate>
+        July 30, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      26k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      219 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">软件管理</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-rpm包管理器"><a href="#1-rpm包管理器" class="headerlink" title="1 rpm包管理器"></a>1 rpm包管理器</h1><p>Centos 系统上使用rpm命令管理程序包，存在包依赖问题</p>
+<p>功能：</p>
+<ul>
+<li>安装</li>
+<li>卸载</li>
+<li>升级</li>
+<li>查询</li>
+<li>校验</li>
+<li>数据库维护</li>
+</ul>
+<h2 id="1-1-安装"><a href="#1-1-安装" class="headerlink" title="1.1 安装"></a>1.1 安装</h2><p>格式：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs http">rpm &#123; -i | --install &#125;  ”安装选项“   包名称<br></code></pre></td></tr></table></figure>
+
+<p>选项：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs http">-i: install 安装<br>-v: verbose 安装过程细节显示<br>-h: 以#显示程序包管理执行进度<br></code></pre></td></tr></table></figure>
+
+<p>常用组合：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">rpm -ivh  PACKAGE_FILE<br></code></pre></td></tr></table></figure>
+
+
+
+<p>rpm包安装[install-options]</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs http">--test: 测试安装，不是真正的安装<br>--nodeps: 忽略依赖关系<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-2-升级和降级"><a href="#1-2-升级和降级" class="headerlink" title="1.2 升级和降级"></a>1.2 升级和降级</h2><p>rpm包升级</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">rpm  &#123;-U | --upgrade&#125;  [install-option] PACKAGE-FILE<br>rpm  &#123;-F | --freshen&#125;  [install-option] PACKAGE-FILE<br></code></pre></td></tr></table></figure>
+
+<p>对应选项：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http">-U | --upgrade :安装有旧包，则升级，不存在旧包，则安装<br>-F | --freshen :安装有旧包，则升级，不存在旧包，则不执行操作<br><br>--oldpackage: 降级<br>--force: 强制安装<br></code></pre></td></tr></table></figure>
+
+<p>常用组合：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">rpm -Uvh  package_file<br>rpm -Fvh  package_file<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-3-包查询"><a href="#1-3-包查询" class="headerlink" title="1.3 包查询"></a>1.3 包查询</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">rpm &#123; -q | --query &#125; [select-options] [query-options]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html">[select-options]<br>-a: 所有包<br>-f: 查看指点的文件由哪个程序包安装生成<br>-p rpmfile: 针对尚未安装的程序包文件做查询操作<br><br>[query-options]<br>--changelog: 查询rpm包的changelog<br>-c: 查询程序的配置文件<br>-d: 查询程序的文档<br>-i: information<br>-l：查看指定的程序包安装后生成的所有文件<br>--scripts：程序包自带的脚本<br>--last：最后安装的包<br>--changelog：安装包的变更历史<br></code></pre></td></tr></table></figure>
+
+<p>常用查询用法：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-qa</span><br><span class="hljs-deletion">-q 	PACHAGE</span><br><span class="hljs-deletion">-qi PACHAGE</span><br><span class="hljs-deletion">-qc PACHAGE </span><br><span class="hljs-deletion">-ql PACHAGE</span><br></code></pre></td></tr></table></figure>
+
+<p> 范例：查看最近安装的包</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs html">[10:24:35 root@localhost ~]#rpm -qa --last | head <br>autofs-5.1.4-74.el8.x86_64                    Wed 26 Jul 2023 04:51:17 AM EDT<br>iwl3160-firmware-25.30.13.0-103.el8.1.noarch  Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl2030-firmware-18.168.6.1-103.el8.1.noarch  Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl2000-firmware-18.168.6.1-103.el8.1.noarch  Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl135-firmware-18.168.6.1-103.el8.1.noarch   Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl105-firmware-18.168.6.1-103.el8.1.noarch   Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl100-firmware-39.31.5.1-103.el8.1.noarch    Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl1000-firmware-39.31.5.1-103.el8.1.noarch   Sun 23 Jul 2023 11:30:26 PM EDT<br>iwl7260-firmware-25.30.13.0-103.el8.1.noarch  Sun 23 Jul 2023 11:30:25 PM EDT<br>iwl6050-firmware-41.28.5.1-103.el8.1.noarch   Sun 23 Jul 2023 11:30:25 PM EDT<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-4-包卸载"><a href="#1-4-包卸载" class="headerlink" title="1.4 包卸载"></a>1.4 包卸载</h2><p>格式：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">rpm &#123; -e| --erase &#125; [--allmatches] [--nodeps] [noscripts] [--notriggers] [--test] PACKAGE_NAME <br></code></pre></td></tr></table></figure>
+
+<h2 id="1-5-包校验"><a href="#1-5-包校验" class="headerlink" title="1.5 包校验"></a>1.5 包校验</h2><p>在安装包时，系统会检查包的来源是否合法</p>
+<p>检查包的完整性和签名</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">rpm -k | --checksig rpmfile<br></code></pre></td></tr></table></figure>
+
+<p>在检查包的来源和完整性前，必须导入所需要公钥</p>
+<p><img src="image-20230726223314137.png" srcset="/img/loading.gif" lazyload alt="image-20230726223314137"></p>
+<h2 id="1-6-数据库维护"><a href="#1-6-数据库维护" class="headerlink" title="1.6 数据库维护"></a>1.6 数据库维护</h2><p>rpm包安装时生成的信息，都放在rpm数据库中</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">/var/lib/rpm<br></code></pre></td></tr></table></figure>
+
+<p>可以重建数据库</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html">rpm &#123;--initdb|--rebuiddb&#125;<br>initdb：初始化，如果事先不存在数据库，则新建，否则，不执行任何操作<br>rebuild：重建已经安装的包头的数据库索引文件<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="2-yum和dnf"><a href="#2-yum和dnf" class="headerlink" title="2 yum和dnf"></a>2 yum和dnf</h1><p>Centos 系统上使用yum、dnf，解决了rpm包依赖问题</p>
+<h2 id="2-1-yum-dnf工作原理"><a href="#2-1-yum-dnf工作原理" class="headerlink" title="2.1 yum/dnf工作原理"></a>2.1 yum/dnf工作原理</h2><p>yum/dnf 是基于C/S模式</p>
+<ul>
+<li>yum 服务器存放rpm包相关包的元数据</li>
+<li>yum客户端访问yum服务器进行安装或查询等</li>
+</ul>
+<p>yum实现过程</p>
+<p>先在yum服务器上创建yum repository（仓库），在仓库中事先存储了众多rpm包，以及包的相关的元数据文件（放于特定目录repodata下），当yum客户端利用yum/dnf工具进行安装包时，会自动下载repodata中的元数据，查询元数据是否存在相关包以及依赖关系，自动从仓库中找到相关包下载并安装。</p>
+<h2 id="2-2-yum客户端配置"><a href="#2-2-yum客户端配置" class="headerlink" title="2.2 yum客户端配置"></a>2.2 yum客户端配置</h2><p>yum客户端配置文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/yum</span>.conf				<span class="hljs-comment">##为所有仓库提供公共配置</span><br><span class="hljs-regexp">/etc/yum</span>.repos.d/*.repo 	<span class="hljs-comment">##为每个仓库提供配置文件</span><br></code></pre></td></tr></table></figure>
+
+<p>帮助参考：man 5 yum.conf</p>
+<p>yum服务器的baseurl形式：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">file:<span class="hljs-regexp">//</span> 本地路径<br>http:<span class="hljs-regexp">//</span><br>https:<span class="hljs-regexp">//</span><br>ftp:<span class="hljs-regexp">//</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：yum仓库指向的路径一定必须是repodata目录所在目录</p>
+<p>相关变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum的repo配置文件中可用的变量：<br><span class="hljs-meta prompt_">$</span><span class="language-bash">releasever：当前OS的发行版的主版本号，如：8，7，6</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash"><span class="hljs-built_in">arch</span>：cpu架构，如：aarch64，i586，i686，x86_64等</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">basearch：系统基础平台：如i386，x86_64等</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">contentdir: 表示目录，比如：centos-8,centos-8</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">YUM0-<span class="hljs-variable">$YUM9</span>：自定义变量</span><br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs http">10:51:15 root@localhost ~]#cat /etc/yum.repos.d/centos8.repo <br>[BaseOS]<br>name=BaseOS<br>baseurl=https://mirrors.aliyun.com/centos/$releasever/BaseOS/$basearch/os/<br>        https://mirror.nju.edu.cn/centos/$releasever/BaseOS/$basearch/os/<br>        https://mirror.sjtu.edu.cn/centos/$releasever/BaseOS/$basearch/os/<br><br></code></pre></td></tr></table></figure>
+
+<p>yum仓库配置脚本：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><code class="hljs http">#!/bin/bash<br><br><br><br>##配置yum源：centos7<br>func_yumcentos7 () &#123;<br>    cd /etc/yum.repos.d/<br>    rm -f ./*<br>    cat &gt; /etc/yum.repos.d/centos7.repo &lt;&lt;EOF<br>[centos7]<br>name=centos7<br>baseurl=file:///mnt/cdrom<br>        https://mirrors.aliyun.com/centos/\$releasever/os/\$basearch/<br>           https://mirrors.cloud.tencent.com/centos/\$releasever/os/\$basearch/<br>gpgcheck=0<br>enabled=1<br><br>##[epel]<br>##name=EPEL<br>##baseurl=https://mirror.tuna.tsinghua.edu.cn/epel/\$releasever/Everything/\$basearch<br>##                https://mirrors.cloud.tencent.com/epel/\$releasever/Everything/\$basearch<br>##        https://mirrors.huaweicloud.com/epel/\$releasever/Everything/\$basearch<br>##        https://mirrors.aliyun.com/epel/\$releasever/Everything/\$basearch<br>##gpgcheck=0<br>##enabled=1<br>##<br>##[extras]<br>##name=extras<br>##baseurl=https://mirror.tuna.tsinghua.edu.cn/centos/\$releasever/extras/\$basearch/os<br>##        https://mirrors.cloud.tencent.com/centos/\$releasever/extras/\$basearch/os<br>##        https://mirrors.huaweicloud.com/centos/\$releasever/extras/\$basearch/os<br>##        https://mirrors.aliyun.com/centos/\$releasever/extras/\$basearch/os<br>##gpgcheck=0<br>##enabled=1<br>##<br>##[PowerTools]<br>##name=CentOS- - PowerTools - mirrors.aliyun.com<br>##baseurl=https://mirror.tuna.tsinghua.edu.cn/centos/\$releasever/PowerTools/\$basearch/os/<br>##        https://mirrors.cloud.tencent.com/centos/\$releasever/PowerTools/\$basearch/os/<br>##        https://mirrors.huaweicloud.com/centos/\$releasever/PowerTools/\$basearch/os/<br>##        https://mirrors.aliyun.com/centos/\$releasever/PowerTools/\$basearch/os/<br>##gpgcheck=0<br>##enabled=1<br>##gpgkey=https://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official<br>EOF<br>&#125;<br><br><br><br><br><br>##配置yum源：centos8<br>func_yumcentos8 () &#123;<br>    cd /etc/yum.repos.d/<br>    rm -f ./*<br>    cat &gt; centos8.repo &lt;&lt;EOF<br>[BaseOS]<br>name=BaseOS<br>baseurl=https://mirrors.aliyun.com/centos/\$releasever/BaseOS/\$basearch/os/<br>        https://mirror.nju.edu.cn/centos/\$releasever/BaseOS/\$basearch/os/<br>        https://mirror.sjtu.edu.cn/centos/\$releasever/BaseOS/\$basearch/os/<br>gpgcheck=0<br>##enabled=1<br><br>[AppStream]<br>name=AppStream<br>baseurl=https://mirrors.aliyun.com/centos/\$releasever/AppStream/\$basearch/os/<br>        https://mirror.nju.edu.cn/centos/\$releasever/AppStream/\$basearch/os/<br>        https://mirror.sjtu.edu.cn/centos/\$releasever/AppStream/\$basearch/os/<br>gpgcheck=0<br>##enabled=<br>[epel]<br>name=EPEL<br>baseurl=https://mirror.tuna.tsinghua.edu.cn/epel/\$releasever/Everything/\$basearch<br>        https://mirrors.cloud.tencent.com/epel/\$releasever/Everything/\$basearch<br>        https://mirrors.huaweicloud.com/epel/\$releasever/Everything/\$basearch<br>        https://mirrors.aliyun.com/epel/\$releasever/Everything/\$basearch<br>gpgcheck=0<br>enabled=1<br><br>[extras]<br>name=extras<br>baseurl=https://mirrors.sdu.edu.cn/centos/\$releasever/extras/\$basearch/os<br>        https://mirror.sjtu.edu.cn/centos/\$releasever/extras/\$basearch/os<br>        https://mirrors.aliyun.com/centos/\$releasever/extras/\$basearch/os<br>gpgcheck=0<br>enabled=1<br><br>[PowerTools]<br>name=Powfunc_yumrockyerTools<br>baseurl=https://mirrors.sdu.edu.cn/centos/\$releasever/PowerTools/\$basearch/os<br>        https://mirror.sjtu.edu.cn/centos/\$releasever/PowerTools/\$basearch/os<br>        https://mirrors.aliyun.com/centos/\$releasever/PowerTools/\$basearch/os<br>gpgcheck=0<br>enabled=1<br>gpgkey=https://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official<br>EOF<br><br>&#125;<br><br><br>##配置yum源：rocky<br>func_yumrocky () &#123; <br>    cd /etc/yum.repos.d/<br>    rm -f ./*    <br>    cat &gt; rocky.repo &lt;&lt;EOF<br>[BaseOS]<br>name=BaseOS<br>baseurl=https://mirrors.aliyun.com/rockylinux/\$releasever/BaseOS/\$basearch/os/<br>        https://mirror.nju.edu.cn/rocky/\$releasever/BaseOS/\$basearch/os/<br>        https://mirror.sjtu.edu.cn/rocky/\$releasever/BaseOS/\$basearch/os/<br>gpgcheck=0<br>##enabled=1<br><br>[AppStream]<br>name=AppStream<br>baseurl=https://mirrors.aliyun.com/rockylinux/\$releasever/AppStream/\$basearch/os/<br>        https://mirror.nju.edu.cn/rocky/\$releasever/AppStream/\$basearch/os/<br>        https://mirror.sjtu.edu.cn/rocky/\$releasever/AppStream/\$basearch/os/<br>gpgcheck=0<br>##enabled=<br>[epel]<br>name=EPEL<br>baseurl=https://mirror.tuna.tsinghua.edu.cn/epel/\$releasever/Everything/\$basearch<br>        https://mirrors.cloud.tencent.com/epel/\$releasever/Everything/\$basearch<br>        https://mirrors.huaweicloud.com/epel/\$releasever/Everything/\$basearch<br>        https://mirrors.aliyun.com/epel/\$releasever/Everything/\$basearch<br>gpgcheck=0<br>enabled=1<br><br>[extras]<br>name=extras<br>baseurl=https://mirrors.sdu.edu.cn/rocky/\$releasever/extras/\$basearch/os<br>        https://mirror.sjtu.edu.cn/rocky/\$releasever/extras/\$basearch/os<br>        https://mirrors.aliyun.com/rockylinux/\$releasever/extras/\$basearch/os<br>gpgcheck=0<br>enabled=1<br><br>[PowerTools]<br>name=PowerTools<br>baseurl=https://mirrors.sdu.edu.cn/rocky/\$releasever/PowerTools/\$basearch/os<br>        https://mirror.sjtu.edu.cn/rocky/\$releasever/PowerTools/\$basearch/os<br>        https://mirrors.aliyun.com/rockylinux/\$releasever/PowerTools/\$basearch/os<br>gpgcheck=0<br>enabled=1<br>gpgkey=https://mirrors.aliyun.com/rockylinux/RPM-GPG-KEY-rockyofficial<br>EOF<br><br>&#125;<br><br><br>##配置apt源：ubuntu<br>func_aptubuntu () &#123;<br>    ##20.04版本apt<br>    cat &gt; /etc/apt/sources.list &lt;&lt;EOF<br>deb https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse<br>deb-src https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse<br><br>deb https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse<br>deb-src https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse<br><br>deb https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse<br>deb-src https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse<br><br># deb https://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse<br># deb-src https://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse<br><br>deb https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse<br>deb-src https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse<br>EOF<br><br>&#125;<br><br>##配置yum源,根据不同的操作系统配置yum源<br>func_yum () &#123;<br>    . /etc/os-release<br>    if [ $ID = &#x27;rocky&#x27; ]; then<br>        echo OS version is $ID<br>        func_yumrocky <br>    elif [ $ID = &#x27;centos&#x27; ]; then<br>        if [ $VERSION_ID = &#x27;8&#x27; ]; then<br>            echo OS version is $ID-$VERSION_ID<br>            func_yumcentos8<br>        elif [ $VERSION_ID = &#x27;7&#x27; ]; then<br>            echo OS version is $ID-$VERSION_ID<br>            func_yumcentos7<br>        else<br>            echo &quot;centos 其他版本不支持&quot;<br>        fi<br>    elif [ $ID = &#x27;ubuntu&#x27; ]; then<br>        echo OS version is $ID-$VERSION_ID<br>        func_aptubuntu<br>        apt update<br>        <br>    else<br>        echo &quot;不支持OS&quot;<br>    fi    <br>&#125;<br><br>func_yum<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-yum命令"><a href="#2-3-yum命令" class="headerlink" title="2.3 yum命令"></a>2.3 yum命令</h2><p>yum命令语法：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum [options] [command] [package ...]<br></code></pre></td></tr></table></figure>
+
+<p>yum的命令行选项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">-y							#自动回答为“yes”<br>-q							#静默模式<br>--nogpgcheck				#禁止进行gpg check<br>--enablerepo=repoidglob		#临时启用此处指定的repo，支持通配符，如：*<br>--disenablerepo=repoidglob	#临时禁用此处指定的repo，和上面语句同时使用，放在后面的生效<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-1-显示仓库列表"><a href="#2-3-1-显示仓库列表" class="headerlink" title="2.3.1 显示仓库列表"></a>2.3.1 显示仓库列表</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum repolist [all | enabled |disabled]<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">[11:15:13 root@localhost ~]#yum repolist all<br>repo id                                           repo name                                                      status<br>AppStream                                         AppStream                                                      enabled<br>BaseOS                                            BaseOS                                                         enabled<br>PowerTools                                        Powfunc_yumrockyerTools                                        enabled<br>epel                                              EPEL                                                           enabled<br>extras                                            extras                                                         enabled<br></code></pre></td></tr></table></figure>
+
+<p>范例：显示仓库的详细信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs shell">[23:29:13 root@localhost data]#yum repolist -v<br>Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, groups-manager, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, system-upgrade<br>YUM version: 4.7.0<br>cachedir: /var/cache/dnf<br>BaseOS                                                                                   17 kB/s | 4.3 kB     00:00    <br>AppStream                                                                                23 kB/s | 4.3 kB     00:00    <br>EPEL                                                                                     11 kB/s | 4.7 kB     00:00    <br>extras                                                                                  9.0 kB/s | 3.1 kB     00:00    <br>PowerTools                                                                               12 kB/s | 4.8 kB     00:00    <br>Repo-id            : AppStream<br>Repo-name          : AppStream<br>Repo-revision      : 8.8<br>Repo-distro-tags      : [cpe:/o:rocky:rocky:8]:  ,  , 8, L, R, c, i, k, n, o, u, x, y<br>Repo-updated       : Fri 21 Jul 2023 11:13:37 AM CST<br>Repo-pkgs          : 7,576<br>Repo-available-pkgs: 6,129<br>Repo-size          : 13 G<br>Repo-baseurl       : https://mirrors.aliyun.com/rockylinux/8/AppStream/x86_64/os/,<br>                   : https://mirror.nju.edu.cn/rocky/8/AppStream/x86_64/os/,<br>                   : https://mirror.sjtu.edu.cn/rocky/8/AppStream/x86_64/os/<br>Repo-expire        : 172,800 second(s) (last: Wed 26 Jul 2023 11:10:59 PM CST)<br>Repo-filename      : /etc/yum.repos.d/rocky.repo<br><br>Repo-id            : BaseOS<br>Repo-name          : BaseOS<br>Repo-revision      : 8.8<br>Repo-distro-tags      : [cpe:/o:rocky:rocky:8]:  ,  , 8, L, R, c, i, k, n, o, u, x, y<br>Repo-updated       : Fri 21 Jul 2023 03:04:21 PM CST<br>Repo-pkgs          : 1,857<br>Repo-available-pkgs: 1,855<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-2-显示程序包"><a href="#2-3-2-显示程序包" class="headerlink" title="2.3.2 显示程序包"></a>2.3.2 显示程序包</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http">yum list<br>yum list [all | glob_exp1] [glob_exp2] ...<br>yum list &#123;available | installed | updates&#125; [glob_exp1] [...]<br><br></code></pre></td></tr></table></figure>
+
+<p>范例：只查看已经安装的包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">[23:35:52 root@localhost data]#yum list installed | head<br>Installed Packages<br>NetworkManager.x86_64                1:1.40.16-1.el8                  @anaconda <br>NetworkManager-libnm.x86_64          1:1.40.16-1.el8                  @anaconda <br>NetworkManager-team.x86_64           1:1.40.16-1.el8                  @anaconda <br>NetworkManager-tui.x86_64            1:1.40.16-1.el8                  @anaconda <br>acl.x86_64                           2.2.53-1.el8.1                   @anaconda <br>at.x86_64                            3.1.20-12.el8                    @BaseOS   <br>audit.x86_64                         3.0.7-4.el8                      @anaconda <br>audit-libs.x86_64                    3.0.7-4.el8                      @anaconda <br>authselect.x86_64                    1.2.6-1.el8                      @anaconda <br><br></code></pre></td></tr></table></figure>
+
+<p>范例：查看可以升级的包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">[23:37:35 root@localhost data]#yum list updates|head -n5<br>Last metadata expiration check: 0:06:58 ago on Wed 26 Jul 2023 11:30:55 PM CST.<br>Available Upgrades<br>NetworkManager.x86_64               1:1.40.16-3.el8_8                  BaseOS   <br>NetworkManager-libnm.x86_64         1:1.40.16-3.el8_8                  BaseOS   <br>NetworkManager-team.x86_64          1:1.40.16-3.el8_8                  BaseOS  <br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-3-安装程序包"><a href="#2-3-3-安装程序包" class="headerlink" title="2.3.3 安装程序包"></a>2.3.3 安装程序包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum install package1 package2 package3 ...<br>yum reinstall package1 package2 package3 ...  ##重新安装<br>--downloadnoly ##只下载相关默认包至/var/cache/yum/x86_64/7/目录下，而不执行<br>install/upgrade/erase<br>--downloaddir=&lt;path&gt;, --destdir=&lt;path&gt;  ##--downloaddir指定下载的目录，如果不存在自动创建<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-3-1-安装epel源包"><a href="#2-3-3-1-安装epel源包" class="headerlink" title="2.3.3.1 安装epel源包"></a>2.3.3.1 安装epel源包</h4><p>范例：安装epel源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell">[11:46:36 root@localhost ~]#yum install -y epel-release<br>[11:46:49 root@localhost ~]#yum install -y sl<br>[11:47:03 root@localhost ~]#rpm -ql sl<br>/usr/bin/sl<br>/usr/lib/.build-id<br>/usr/lib/.build-id/cb<br>/usr/lib/.build-id/cb/664a85114a0cb25cf0460ada9ed86a7b128658<br>/usr/share/doc/sl<br>/usr/share/doc/sl/LICENSE<br>/usr/share/doc/sl/README.ja.md<br>/usr/share/doc/sl/README.md<br>/usr/share/man/ja/man1/sl.1.ja.gz<br>/usr/share/man/man1/sl.1.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">运行安装sl程序，可以看到火车</span><br>[11:47:14 root@localhost ~]#sl -a<br></code></pre></td></tr></table></figure>
+
+<p><img src="image-20230726234925724.png" srcset="/img/loading.gif" lazyload alt="image-20230726234925724"></p>
+<p>2.3.3.2 只下载相关依赖包，而不安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#/data/httpd/目录如果不存在会自动创建</span></span><br>[11:49:21 root@localhost ~]#yum -y install --downloadonly --downloaddir=/data/http httpd<br>11:53:03 root@localhost ~]#ls /data/http/<br>apr-1.6.3-12.el8.x86_64.rpm<br>apr-util-1.6.1-6.el8.x86_64.rpm<br>apr-util-bdb-1.6.1-6.el8.x86_64.rpm<br>apr-util-openssl-1.6.1-6.el8.x86_64.rpm<br>centos-logos-httpd-85.8-2.el8.noarch.rpm<br>httpd-2.4.37-43.module_el8.5.0+1022+b541f3b1.x86_64.rpm<br>httpd-filesystem-2.4.37-43.module_el8.5.0+1022+b541f3b1.noarch.rpm<br>httpd-tools-2.4.37-43.module_el8.5.0+1022+b541f3b1.x86_64.rpm<br>mailcap-2.1.48-3.el8.noarch.rpm<br>mod_http2-1.15.7-3.module_el8.4.0+778+c970deab.x86_64.rpm<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-4-卸载程序包"><a href="#2-3-4-卸载程序包" class="headerlink" title="2.3.4 卸载程序包"></a>2.3.4 卸载程序包</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum remove | erase PACKAGE1 PACKAGE2 ...<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-5-升级和降级"><a href="#2-3-5-升级和降级" class="headerlink" title="2.3.5 升级和降级"></a>2.3.5 升级和降级</h3><p>检查可升级：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum check-update<br></code></pre></td></tr></table></figure>
+
+<p>升级和降级</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum update | upgrade PACKAGE1 PACKAGE2 ...<br>yum upgrade-minimal  #最小化升级<br>yum downgrade  PACKAGE1 PACKAGE2 ... ##降级<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-6-查询"><a href="#2-3-6-查询" class="headerlink" title="2.3.6 查询"></a>2.3.6 查询</h3><p>查看程序包information</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum info  [...]<br></code></pre></td></tr></table></figure>
+
+<p>查看指定的特性（或者某文件）是由哪个程序包所提供：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum provides | whatprovides [feature1] [...]<br></code></pre></td></tr></table></figure>
+
+<p>注意：要写全路径，而不只是文件名，否则有可能无法查询到</p>
+<h3 id="2-3-7仓库缓存"><a href="#2-3-7仓库缓存" class="headerlink" title="2.3.7仓库缓存"></a>2.3.7仓库缓存</h3><p>清除目录/var/cache/yum缓存</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum clean [package | metadata | expire-cache |rpmdb | plugins | all]<br></code></pre></td></tr></table></figure>
+
+<p>构建缓存：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum makecache<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-8-查看yum事务历史"><a href="#2-3-8-查看yum事务历史" class="headerlink" title="2.3.8 查看yum事务历史"></a>2.3.8 查看yum事务历史</h3><p>yum执行安装卸载命令会记录到相关日志中</p>
+<p>日志文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">Centos 7以前版本日志</span><br>/var/log/yum.log<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Centos 8版本日志</span><br>/var/log/dnf.rpm.log<br>/var/log/dnf.log<br></code></pre></td></tr></table></figure>
+
+<p>日志命令</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum history [info | list| package-lsit|summary |package-info|.....]<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:22:20 root@localhost ~]#yum history<br>Repository epel is listed more than once in the configuration<br>ID     | Command line                                                      | Date and time    | Action(s)      | Altered<br>------------------------------------------------------------------------------------------------------------------------<br>     6 | install -y sl                                                     | 2023-07-26 11:47 | Install        |    1   <br>     5 | install -y epel-release                                           | 2023-07-26 11:46 | Install        |    1 EE<br>     4 | -y install autofs vim-enhanced tcpdump autofs chrony lrzsz tree t | 2023-07-26 11:15 | Install        |   48   <br>     3 | -y install vim                                                    | 2023-07-26 11:03 | Install        |    4   <br>     2 | -y install autofs                                                 | 2023-07-26 04:51 | Install        |    1   <br>     1 |                                                                   | 2023-07-23 23:29 | Install        |  380 EE<br>[22:22:36 root@localhost ~]#yum history info 6<br>Repository epel is listed more than once in the configuration<br>Transaction ID : 6<br>Begin time     : Wed 26 Jul 2023 11:47:03 AM EDT<br>Begin rpmdb    : 431:0acc99a5de0ad6b80452bf65a3621a41e522db90<br>End time       : Wed 26 Jul 2023 11:47:03 AM EDT (0 seconds)<br>End rpmdb      : 432:72e1a9f5d81b9e8b08bcfb0ccdf6ba8dc1f05b1a<br>User           : root &lt;root&gt;<br>Return-Code    : Success<br>Releasever     : 8<br>Command Line   : install -y sl<br>Comment        : <br>Packages Altered:<br>    Install sl-5.02-1.el8.x86_64 @epel<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-9-安装及升级本地程序包"><a href="#2-3-9-安装及升级本地程序包" class="headerlink" title="2.3.9 安装及升级本地程序包"></a>2.3.9 安装及升级本地程序包</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">yum localinstall | install rpmfile1 [rpmfile2] ....<br>yum localupdate| update rpmfile1 [rpmfile2] ....<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-10-查看包的安全警报"><a href="#2-3-10-查看包的安全警报" class="headerlink" title="2.3.10 查看包的安全警报"></a>2.3.10 查看包的安全警报</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum updateinfo --sumary | --list  |--info<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-11-包组管理相关命令"><a href="#2-3-11-包组管理相关命令" class="headerlink" title="2.3.11 包组管理相关命令"></a>2.3.11 包组管理相关命令</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http">yum grouplist [hidden] [groupwildren] ...<br>yum groupinstall [group1] [group2] ...<br>yum groupupdate[group1] [group2] ...<br>yum groupremove [group1] [group2] ...<br>yum groupinfo [group1] [group2] ...<br></code></pre></td></tr></table></figure>
+
+<p>范例：最小化安装的系统安装图形环境</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:23:02 root@localhost ~]#yum grouplist<br>Repository epel is listed more than once in the configuration<br>Last metadata expiration check: 11:15:43 ago on Wed 26 Jul 2023 11:14:58 AM EDT.<br>Available Environment Groups:<br>   Server with GUI<br>   Server<br>   Workstation<br>   KDE Plasma Workspaces<br>   Custom Operating System<br>   Virtualization Host<br>Installed Environment Groups:<br>   Minimal Install<br>Available Groups:<br>   Legacy UNIX Compatibility<br>   Container Management<br>   Development Tools<br>   .NET Core Development<br>   Graphical Administration Tools<br>   Headless Management<br>   Network Servers<br>   RPM Development Tools<br>   Scientific Support<br>   Security Tools<br>   Smart Card Support<br>   System Tools<br>   Fedora Packager<br>   Xfce<br>[22:30:41 root@localhost ~]#yum groupinfo &quot;Server with GUI&quot;<br>Repository epel is listed more than once in the configuration<br>Last metadata expiration check: 11:16:48 ago on Wed 26 Jul 2023 11:14:58 AM EDT.<br>Environment Group: Server with GUI<br> Description: An integrated, easy-to-manage server with a graphical interface.<br> Mandatory Groups:<br>   Container Management<br>   GNOME<br>   Hardware Monitoring Utilities<br>   Headless Management<br>   Internet Browser<br>   Server product core<br>   base-x<br>   core<br>   fonts<br>   guest-desktop-agents<br>   hardware-support<br>   input-methods<br>   multimedia<br>   networkmanager-submodules<br>   print-client<br>   standard<br> Optional Groups:<br>   Basic Web Server<br>   DNS Name Server<br>   Debugging Tools<br>   FTP Server<br>   File and Storage Server<br>   Guest Agents<br>   Infiniband Support<br>   Mail Server<br>   Network File System Client<br>   Network Servers<br>   Performance Tools<br>   Remote Desktop Clients<br>   Remote Management for Linux<br>   Virtualization Client<br>   Virtualization Hypervisor<br>   Virtualization Tools<br>   Windows File Server<br>[22:31:47 root@localhost ~]#yum groupinstall GNOME<br>Repository epel is listed more than once in the configuration<br>Last metadata expiration check: 11:17:55 ago on Wed 26 Jul 2023 11:14:58 AM EDT.<br>Dependencies resolved.<br>========================================================================================================================<br> Package                                      Arch    Version                                          Repository  Size<br>========================================================================================================================<br>Installing group/module packages:<br> ModemManager                                 x86_64  1.10.8-4.el8                                     BaseOS     923 k<br> NetworkManager-adsl                          x86_64  1:1.32.10-4.el8                                  BaseOS     144 k<br> PackageKit-command-not-found                 x86_64  1.1.12-6.el8                                     AppStream   27 k<br> PackageKit-gtk3-module                       x86_64  1.1.12-6.el8                                     AppStream   18 k<br> at-spi2-atk                                  x86_64  2.26.2-1.el8                                     AppStream   89 k<br> at-spi2-core                                 x86_64  2.28.0-1.el8                                     AppStream  169 k<br> avahi                                        x86_64  0.7-20.el8                                       BaseOS     281 k<br> baobab                                       x86_64  3.28.0-4.el8                                     AppStream  402 k<br> cheese                                       x86_64  2:3.28.0-3.el8                                   AppStream  174 k<br> chrome-gnome-shell                           x86_64  10.1-7.el8                                       AppStream   33 k<br> dconf                                        x86_64  0.28.0-4.el8                                     AppStream  108 k<br> eog                                          x86_64  3.28.4-1.el8                                     AppStream  5.2 M<br> evince                                       x86_64  3.28.4-14.el8                                    AppStream  1.6 M<br> evince-nautilus                              x86_64  3.28.4-14.el8                                    AppStream   49 k<br> file-roller                                  x86_64  3.28.1-4.el8                                     AppStream  1.3 M<br> fprintd-pam                                  x86_64  1.90.9-2.el8                                     AppStream   28 k<br> gdm                                          x86_64  1:40.0-15.el8                                    AppStream  881 k<br> gedit                                        x86_64  2:3.28.1-3.el8                                   AppStream  2.5 M<br> glib-networking                              x86_64  2.56.1-1.1.el8            <br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-12-实现私有yum仓库"><a href="#2-3-12-实现私有yum仓库" class="headerlink" title="2.3.12 实现私有yum仓库"></a>2.3.12 实现私有yum仓库</h3><p>下载所有yum仓库的相关包和meta数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">CentOS 8 dnf 工具集成</span><br>dnf reposync --help #查看帮助<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#默认只下载rpm包，不下载meta数据，需要指定--download-metadata才能下载meta</span></span><br>dnf reposync --repoid=REPOID --download-meta -p /path<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">CentOS 7以前版本，reposync工具来自于yum-utils包</span><br>reposync --repoid=REPOID --download-metadata -p /path<br></code></pre></td></tr></table></figure>
+
+<p>创建私有仓库：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">createrepo [options] &lt;directory&gt;<br></code></pre></td></tr></table></figure>
+
+<p>范例：创建局域网的基础base的私有仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#配置仓库服务器：</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#安装apache</span></span><br>[16:48:44 root@rocky8 ~]#yum -y install httpd<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#开启apache服务</span></span><br>[16:52:20 root@rocky8 html]#systemctl enable --now httpd<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#创建私有yum源仓库路径</span></span><br>[16:53:50 root@rocky8 html]#mkdir /var/www/html/centos/8 -pv<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#下载相关仓库包和元数据</span></span><br>[16:55:38 root@rocky8 html]#dnf reposync --repoid=extras --download-metadata -p /var/www/html/centos<br><br><br>[17:20:22 root@rocky8 centos]# ls extras/Packages/a<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#配置客户端仓库：</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h1 id="3-源码编译"><a href="#3-源码编译" class="headerlink" title="3 源码编译"></a>3 源码编译</h1><h2 id="3-1-源码编译介绍"><a href="#3-1-源码编译介绍" class="headerlink" title="3.1 源码编译介绍"></a>3.1 源码编译介绍</h2><p>程序包编译安装：</p>
+<p>源代码–&gt;预处理–&gt;编译–&gt;汇编–&gt;链接–&gt;执行</p>
+<p>多文件：文件中的代码之间，很可能存在跨文件依赖关系</p>
+<p>虽然有很多开源软件将软件打包，可以直接使用，但并不是所有的源代码都打包了，如果想使用开源软件，可能需要自己下载源码包，进行编译安装。另外即使提供了包，由于生产中需要使用软件的某些特性，仍需要自行编译安装。</p>
+<h2 id="3-2开源程序源代码的获取"><a href="#3-2开源程序源代码的获取" class="headerlink" title="3.2开源程序源代码的获取"></a>3.2开源程序源代码的获取</h2><p>项目官方自建站点：</p>
+<p>​        apache.org</p>
+<p>​        mariada.org</p>
+<p>代码托管：</p>
+<p>​        github.com</p>
+<p>​        gitee.com</p>
+<p>​        SourceForge.net</p>
+<p>​        code.goole.com</p>
+<p>3.3 编译源码的项目工具</p>
+<ul>
+<li><p>C、C++的源码编译：使用make项目管理器</p>
+<p>configure脚本–&gt;makefile.in–&gt;makefile</p>
+<p>相关开发工具：</p>
+<p>autoconf：生成configure脚本</p>
+<p>automake：生成makefile.in</p>
+</li>
+<li><p>java的源代码便利：使用maven</p>
+</li>
+</ul>
+<h2 id="3-4-C语言的源代码编译安装过程"><a href="#3-4-C语言的源代码编译安装过程" class="headerlink" title="3.4 C语言的源代码编译安装过程"></a>3.4 C语言的源代码编译安装过程</h2><p>利用编译工具，通常只需要三大步骤</p>
+<ul>
+<li>./configure<ol>
+<li>通过选项传递参数，指定安装路径、启用特性等；执行时会参考用户的指定以及Makefile.in文件生成Makefile</li>
+<li>检查依赖到的外部文件，如依赖的软件包</li>
+</ol>
+</li>
+<li>make 根据makefile文件，会检测依赖的环境，进行构建应用程序</li>
+<li>make install 复制文件到相应路径</li>
+</ul>
+<p>注意：安装前可以通过查看README，INSTALL获取帮助</p>
+<h3 id="3-4-1编译安装准备"><a href="#3-4-1编译安装准备" class="headerlink" title="3.4.1编译安装准备"></a>3.4.1编译安装准备</h3><p>准备：安装相关的依赖包</p>
+<ul>
+<li>开发工具：make，gcc</li>
+<li>开发环境：开发库（glibc），头文件，可以安装开发包组Development Tools</li>
+<li>软件相关依赖包</li>
+</ul>
+<p>生产实践：基于最小化安装的系统建议安装下面相关包</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">yum -y install gcc make autoconf gcc-c++ glibc glibc-devel pcre pcre-devel openssl  openssl-devel systemd-devel zlib-devel vim lrzsz tree tmux lsof tcpdump wget net-tools iotop bc bzip2 zip unzip nfs-utils man-pages<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-4-2-编译安装"><a href="#3-4-2-编译安装" class="headerlink" title="3.4.2 编译安装"></a>3.4.2 编译安装</h3><p>第一步：运行configure脚本，生成makefile文件</p>
+<p>其选项主要功能：</p>
+<ul>
+<li>可以指定安装位置</li>
+<li>指定启用的特性</li>
+</ul>
+<p>获取其支持使用的选项</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">./configure --help<br></code></pre></td></tr></table></figure>
+
+<p>选项分类：</p>
+<ul>
+<li><p>安装路径设定</p>
+<p>–prefix=/PATH ：指定默认的安装位置，默认为/usr/local</p>
+<p>–sysconfdir=/PATH：配置文件安装位置</p>
+<p>system types：支持交叉编译</p>
+</li>
+<li><p>软件特性和相关指定：</p>
+<p>Optional Feature ：可选特性</p>
+<p>​    –disable-FEATURE</p>
+<p>​    –enable-FEATURE[=ARG]</p>
+<p>Optional Packages：可选包</p>
+<p>​    –with-PackAGE[=ARG]   依赖包</p>
+<p>​    –without-PACKAGE    禁用依赖关系</p>
+<p>注意：通常被编译操作依赖的程序包，需要安装此程序包的“开发”组件，其包名一般类似于name-devel-VERSION</p>
+</li>
+</ul>
+<p>第二步：make</p>
+<p>第三步：make install</p>
+<h3 id="3-4-3-安装后的配置"><a href="#3-4-3-安装后的配置" class="headerlink" title="3.4.3 安装后的配置"></a>3.4.3 安装后的配置</h3><ol>
+<li><p>二进制程序目录导入至PATH环境变量中</p>
+<p>编辑文件/etc/profile.d/NAME.sh</p>
+</li>
+</ol>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">export PATH=/PATH/TO/BIN:$PATH<br></code></pre></td></tr></table></figure>
+
+<p>​    2.相关用户及文件</p>
+<p>有些开源软件编译完成后，还需要创建相关的用户及文件</p>
+<p>​    3.导入帮助手册</p>
+<p>​        编辑/etc/man.config | man_db.conf文件，添加一个MANPATH</p>
+<h3 id="3-4-4-编译安装实战案例"><a href="#3-4-4-编译安装实战案例" class="headerlink" title="3.4.4 编译安装实战案例"></a>3.4.4 编译安装实战案例</h3><h4 id="3-4-4-1-官网下载并编译安装新版httpd-2-4-57"><a href="#3-4-4-1-官网下载并编译安装新版httpd-2-4-57" class="headerlink" title="3.4.4.1 官网下载并编译安装新版httpd 2.4.57"></a>3.4.4.1 官网下载并编译安装新版httpd 2.4.57</h4><p>范例：centos8编译安装httpd-2.4.57</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#安装前准备，关闭防护墙和selinux</span></span><br>[root@centos7 ~]# systemctl disable --now firewalld<br>sed -i &#x27;/^SELINUX=/c SELINUX=disabled&#x27; /etc/selinux/config<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">1 安装相关包</span><br>[05:15:39 root@localhost ~]#yum -y install gcc make autoconf apr-devel apr-util-devel pcre-devel openssl-devel redhat-rpm-config <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2 下载并解压缩包</span><br>[05:15:39 root@localhost ~]#wget https://mirrors.aliyun.com/apache/httpd/httpd-2.4.57.tar.gz<br><br>[05:15:39 root@localhost ~]#tar xvf httpd-2.4.57.tar.gz -C /usr/local/src<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3 配置</span><br>[05:29:13 root@localhost httpd-2.4.57]#cd /usr/local/src/httpd-2.4.57/<br>[05:29:13 root@localhost httpd-2.4.57]#./configure --prefix=/apps/httpd --sysconfdir=/etc/httpd --enable-ssl<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">4 编译并安装</span><br>[05:29:13 root@localhost httpd-2.4.57]#make -j 4 &amp;&amp; make install<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">5 配置环境</span><br>[05:29:13 root@localhost httpd-2.4.57]#echo &#x27;PATH=/apps/httpd/bin:$PATH&#x27; &gt; /etc/profile.d/httpd.sh<br>[05:29:13 root@localhost httpd-2.4.57]#. /etc/profile.d/httpd.sh<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">6 运行</span><br>[05:29:13 root@localhost httpd-2.4.57]#apachectl start<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">7 指定用apache用户运行</span><br>[05:52:38 root@localhost httpd-2.4.57]#useradd -r -s /sbin/nologin -d /var/www -c Apache -u 48 apache<br>[05:29:13 root@localhost httpd-2.4.57]#<br>user apache<br>group apache<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">8 配置生效和验证</span><br>[05:29:13 root@localhost httpd-2.4.57]#apachectl restart<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">9 查看进程</span><br>[05:29:13 root@localhost httpd-2.4.57]#ps aux<br><br></code></pre></td></tr></table></figure>
+
+<p>范例：httpd一键安装脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash"><span class="hljs-comment">#***************************************************************************</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Author:		tangbeiting</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">QQ:			306876058</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Date:			2023-07-28</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">FileName:		http_src.sh</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">URL:			https://xiaohexie00.github.io/</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Description:		The <span class="hljs-built_in">test</span> script</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Copyright (C):	2023 ALL rights reserved</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">**************************************************************************</span><br><br><br>HTTPD_VERSION=2.4.57<br>INSTALL_DIR=/apps/httpd<br>COLOR=&quot;echo -e  \E[32;1m&quot;<br>END=&quot;\E[0m&quot;<br>CPUS=4<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#安装前准备，关闭防护墙和selinux</span></span><br>fun_disable () &#123;<br>    systemctl disable --now firewalld<br>    sed -i &#x27;/^SELINUX=/c SELINUX=disabled&#x27; /etc/selinux/config<br><br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##使用yum命令的httpd源码编译安装</span></span><br>fun_yum_httpd () &#123;<br>    #1 安装相关包<br>    yum -y install gcc make autoconf apr-devel apr-util-devel pcre-devel openssl-devel redhat-rpm-config <br>    rpm -q wget || yum -y install wget<br><br>    cd /usr/local/src<br>    #2 下载并解压缩包<br>    if [ ! -f httpd-$&#123;HTTPD_VERSION&#125;.tar.gz  ]; then<br>        wget https://mirrors.aliyun.com/apache/httpd/httpd-$&#123;HTTPD_VERSION&#125;.tar.gz || &#123; $COLOR&quot;下载失败，退出&quot;$END ; exit ; &#125; <br>    fi<br>    <br>    <br>    tar xf httpd-$&#123;HTTPD_VERSION&#125;.tar.gz <br><br>    <br>    #3 配置<br>    cd /usr/local/src/httpd-$&#123;HTTPD_VERSION&#125;/<br>    ./configure --prefix=$&#123;INSTALL_DIR&#125; --sysconfdir=/etc/httpd --enable-ssl<br>    #4 编译并安装<br>    make -j $CPUS  &amp;&amp;  make install<br>    #5 配置环境<br>    echo &#x27;PATH=/apps/httpd/bin:$PATH&#x27; &gt; /etc/profile.d/httpd.sh<br>    . /etc/profile.d/httpd.sh<br>    #6 运行<br>    apachectl start &amp;&amp; $COLOR&quot;安装成功&quot;$END<br>    $COLOR&quot;请访问：http://`hostname -I`&quot;$END<br><br><br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##使用apt命令的httpd源码编译安装</span></span><br>fun_apt_httpd () &#123;<br>    #1 安装相关包<br>    apt update<br>    apt -y install gcc  autoconf  openssl-devel redhat-rpm-config wget <br>    apt -y install libapr* libpcre3* libssl-dev make <br>    ##dpkg -q wget || apt -y install wget<br><br>    cd /usr/local/src<br>    #2 下载并解压缩包<br>    if [ ! -f httpd-$&#123;HTTPD_VERSION&#125;.tar.gz  ]; then<br>        wget https://mirrors.aliyun.com/apache/httpd/httpd-$&#123;HTTPD_VERSION&#125;.tar.gz || &#123; $COLOR&quot;下载失败，退出&quot;$END;exit ; &#125; <br>    fi<br>    tar xvf httpd-$&#123;HTTPD_VERSION&#125;.tar.gz -C /usr/local/src<br><br><br>    #3 配置<br>    cd /usr/local/src/httpd-$&#123;HTTPD_VERSION&#125;/<br>    ./configure --prefix=$&#123;INSTALL_DIR&#125; --sysconfdir=/etc/httpd --enable-ssl<br>    #4 编译并安装<br>    make -j $CPUS  &amp;&amp;  make install<br>    #5 配置环境<br>    echo &#x27;PATH=/apps/httpd/bin:$PATH&#x27; &gt; /etc/profile.d/httpd.sh<br>    . /etc/profile.d/httpd.sh<br>    #6 运行<br>    apachectl start &amp;&amp; $COLOR&quot;安装成功&quot;$END<br>    $COLOR&quot;请访问：http://`hostname -I`&quot;$END<br><br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#httpd源码编译安装</span></span><br>fun_httpd_install () &#123;<br>    . /etc/os-release<br>    if [ $ID = &#x27;rocky&#x27; -o $ID = &#x27;centos&#x27; ]; then<br>        echo OS version is $ID-$VERSION_ID<br>        fun_yum_httpd<br>    elif [ $ID = &#x27;ubuntu&#x27; ]; then<br>        echo OS version is $ID-$VERSION_ID<br>        apt update<br>        fun_apt_httpd<br>    else<br>        echo &quot;不支持OS&quot;<br>    fi<br><br>&#125;<br><br>main () &#123;<br>    fun_disable<br>    fun_httpd_install<br><br>&#125;<br><br>main<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="4-Ubuntu软件管理"><a href="#4-Ubuntu软件管理" class="headerlink" title="4 Ubuntu软件管理"></a>4 Ubuntu软件管理</h1><p>Debian软件包通常为预编译的二进制格式扩展名“.deb”,类似rpm文件，因此安装快速无需编译软件。包文件包括特定功能或软件所必需的文件、元数和指令</p>
+<ul>
+<li>dpkg：package manager for debian，类似于rpm。dpkg是基于debian的系统的包管理工具。可以安装，删除和构建软件包，但无法自动下载和安装软件包或其他依赖项</li>
+<li>apt：Advanced Packaging Tool，功能强大的软件包管理工具，甚至可升级整个Ubuntu的系统，基于客户/服务器架构，类似于yum</li>
+</ul>
+<h2 id="4-1-APT工作原理"><a href="#4-1-APT工作原理" class="headerlink" title="4.1 APT工作原理"></a>4.1 APT工作原理</h2><p>略</p>
+<h2 id="4-2-dpkg包管理工具"><a href="#4-2-dpkg包管理工具" class="headerlink" title="4.2 dpkg包管理工具"></a>4.2 dpkg包管理工具</h2><p>帮助查看：man dpkg</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装包，不支持包的依赖</span><br>dpkg -i package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除包，不建议，不自动卸载依赖于它的包</span><br>dpkg -r package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除包（包括配置文件）</span><br>dpkg -P package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">列出当前已经安装的包，类似于rpm -qa</span><br>dpkg -l<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">显示该包的简要说明</span><br>dpkg -l package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">列出该包的状态，包括详细信息，类似rpm -qi</span><br>dpkg -s package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">列出该包所包含的文件，类似rpm -ql</span><br>dpkg -L package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">搜索包含pattern的包，类似rpm -qf</span><br>dpkg -S &lt;pattern&gt;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置包，-a使用，配置所有没有配置的软件包</span><br>dpkg --configure package<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">列出deb包的内容，类似rpm -qpl</span><br>dpkg -c package.deb<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">解开deb包的内容</span><br>dpkg --unpack package.deb<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-3-apt"><a href="#4-3-apt" class="headerlink" title="4.3 apt"></a>4.3 apt</h2><p>apt 和apt-get命令对比</p>
+<table>
+<thead>
+<tr>
+<th>apt命令</th>
+<th>被取代的命令（即apt-get）</th>
+<th>命令的功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>apt install</td>
+<td>apt-get install</td>
+<td>安装软件包</td>
+</tr>
+<tr>
+<td>apt move</td>
+<td></td>
+<td>移除软件包</td>
+</tr>
+<tr>
+<td>apt pruge</td>
+<td></td>
+<td>移除软件包及配置文件</td>
+</tr>
+<tr>
+<td>apt update</td>
+<td></td>
+<td>刷新存储库索引</td>
+</tr>
+<tr>
+<td>apt upgrade</td>
+<td></td>
+<td>升级所有可升级的软件包</td>
+</tr>
+<tr>
+<td>apt autoremove</td>
+<td></td>
+<td>自动删除不需要的包</td>
+</tr>
+<tr>
+<td>apt full-upgrade</td>
+<td></td>
+<td>在升级软件包时自动处理依赖关系</td>
+</tr>
+<tr>
+<td>apt search</td>
+<td>apt-cache search</td>
+<td>搜索应用程序</td>
+</tr>
+<tr>
+<td>apt show</td>
+<td>apt-cache show</td>
+<td>显示安装细节</td>
+</tr>
+</tbody></table>
+<p>apt特有命令</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">apt list              列出包含条件的包（已安装，可以升级的）<br>apt edit-sources      编辑源列表<br></code></pre></td></tr></table></figure>
+
+<p>APT包索引文件</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">/etc/apt/sources.list<br>/etc/apt/sources.list.d<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-4-查看仓库中的指定软件的所有版本"><a href="#4-4-查看仓库中的指定软件的所有版本" class="headerlink" title="4.4 查看仓库中的指定软件的所有版本"></a>4.4 查看仓库中的指定软件的所有版本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ubuntu:/data# apt-cache madison vim<br>       vim | 2:8.1.2269-1ubuntu5.15 | https://mirrors.aliyun.com/ubuntu focal-security/main amd64 Packages<br>       vim | 2:8.1.2269-1ubuntu5.15 | https://mirrors.aliyun.com/ubuntu focal-updates/main amd64 Packages<br>       vim | 2:8.1.2269-1ubuntu5 | https://mirrors.aliyun.com/ubuntu focal/main amd64 Packages<br>       vim | 2:8.1.2269-1ubuntu5 | https://mirrors.aliyun.com/ubuntu focal/main Sources<br>       vim | 2:8.1.2269-1ubuntu5.15 | https://mirrors.aliyun.com/ubuntu focal-security/main Sources<br>       vim | 2:8.1.2269-1ubuntu5.15 | https://mirrors.aliyun.com/ubuntu focal-updates/main Sources<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-5-Ubuntu-建议安装的常用包"><a href="#4-5-Ubuntu-建议安装的常用包" class="headerlink" title="4.5 Ubuntu 建议安装的常用包"></a>4.5 Ubuntu 建议安装的常用包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ubuntu:/data# apt -y install iproute2 ntpdate tcpdump telnet traceroute nfs-kernel-server nfs-common  lrzsz tree openssl libssl-dev  bash-completion libpcre3 libpcre3-dev zlib-dev gcc wget bzip2 zip unzip rsync openssh_server iotop unzip zip<br><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/06/%E7%AC%AC%E5%9B%9B%E5%91%A8%E4%BD%9C%E4%B8%9A/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">第四周作业</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/21/%E7%AC%AC%E4%B8%89%E5%91%A8%E4%BD%9C%E4%B8%9A7-21/">
+                        <span class="hidden-mobile">第三周作业7.21</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

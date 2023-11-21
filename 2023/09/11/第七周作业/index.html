@@ -1,0 +1,903 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="[TOC]  1 总结pg和mysql的优劣势。MySQL相对于PostgreSQL的劣势：    MySQL PostgreSQL    最重要的引擎InnoDB很早就由Oracle公司控制。目前整个MySQL数据库都由Oracle控制。 BSD协议，没有被大公司垄断。   对复杂查询的处理较弱，查询优化器不够成熟 很强大的查询优化器，支持很复杂的查询处理。   只有一种表连接类型:嵌套循环连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第七周作业">
+<meta property="og:url" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/index.html">
+<meta property="og:site_name" content="5-12 23:30">
+<meta property="og:description" content="[TOC]  1 总结pg和mysql的优劣势。MySQL相对于PostgreSQL的劣势：    MySQL PostgreSQL    最重要的引擎InnoDB很早就由Oracle公司控制。目前整个MySQL数据库都由Oracle控制。 BSD协议，没有被大公司垄断。   对复杂查询的处理较弱，查询优化器不够成熟 很强大的查询优化器，支持很复杂的查询处理。   只有一种表连接类型:嵌套循环连接">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/image-20230916175616026.png">
+<meta property="og:image" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/image-20231003233044764.png">
+<meta property="og:image" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/image-20230928224114461.png">
+<meta property="og:image" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/image-20230928225410387.png">
+<meta property="og:image" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/image-20230928230020677.png">
+<meta property="article:published_time" content="2023-09-11T10:59:51.000Z">
+<meta property="article:modified_time" content="2023-11-21T13:07:39.255Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/09/11/%E7%AC%AC%E4%B8%83%E5%91%A8%E4%BD%9C%E4%B8%9A/image-20230916175616026.png">
+  
+  
+  <title>第七周作业 - 5-12 23:30</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="第七周作业">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-09-11 10:59" pubdate>
+        September 11, 2023 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      41k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      346 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">第七周作业</h1>
+            
+            <div class="markdown-body">
+              <p>[TOC]</p>
+<hr>
+<h1 id="1-总结pg和mysql的优劣势。"><a href="#1-总结pg和mysql的优劣势。" class="headerlink" title="1 总结pg和mysql的优劣势。"></a>1 总结pg和mysql的优劣势。</h1><p><strong>MySQL相对于PostgreSQL的劣势：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>MySQL</strong></th>
+<th><strong>PostgreSQL</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最重要的引擎InnoDB很早就由Oracle公司控制。目前整个MySQL数据库都由Oracle控制。</td>
+<td>BSD协议，没有被大公司垄断。</td>
+</tr>
+<tr>
+<td>对复杂查询的处理较弱，查询优化器不够成熟</td>
+<td>很强大的查询优化器，支持很复杂的查询处理。</td>
+</tr>
+<tr>
+<td>只有一种表连接类型:嵌套循环连接(nested-loop),不支持排序-合并连接(sort-merge join)与散列连接(hash join)。</td>
+<td>都支持</td>
+</tr>
+<tr>
+<td>性能优化工具与度量信息不足</td>
+<td>提供了一些性能视图，可以方便的看到发生在一个表和索引上的select、delete、update、insert统计信息，也可以看到cache命中率。网上有一个开源的pgstatspack工具。</td>
+</tr>
+<tr>
+<td>InnoDB的表和索引都是按相同的方式存储。也就是说表都是索引组织表。这一般要求主键不能太长而且插入时的主键最好是按顺序递增，否则对性能有很大影响。</td>
+<td>不存在这个问题。</td>
+</tr>
+<tr>
+<td>大部分查询只能使用表上的单一索引;在某些情况下，会存在使用多个索引的查询,但是查询优化器通常会低估其成本,它们常常比表扫描还要慢。</td>
+<td>不存在这个问题</td>
+</tr>
+<tr>
+<td>表增加列，基本上是重建表和索引，会花很长时间。</td>
+<td>表增加列，只是在数据字典中增加表定义，不会重建表</td>
+</tr>
+<tr>
+<td>存储过程与触发器的功能有限。可用来编写存储过程、触发器、计划事件以及存储函数的语言功能较弱</td>
+<td>除支持pl/pgsql写存储过程，还支持perl、python、Tcl类型的存储过程：pl/perl，pl/python，pl/tcl。 也支持用C语言写存储过程。</td>
+</tr>
+<tr>
+<td>不支持Sequence。</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>不支持函数索引，只能在创建基于具体列的索引。 不支持物化视图。</td>
+<td>支持函数索引，同时还支持部分数据索引，通过规则系统可以实现物化视图的功能。</td>
+</tr>
+<tr>
+<td>执行计划并不是全局共享的, 仅仅在连接内部是共享的。</td>
+<td>执行计划共享</td>
+</tr>
+<tr>
+<td>MySQL支持的SQL语法(ANSI SQL标准)的很小一部分。不支持递归查询、通用表表达式（Oracle的with 语句）或者窗口函数（分析函数）。</td>
+<td>都 支持</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>不支持用户自定义类型或域(domain)</th>
+<th>支持。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>对于时间、日期、间隔等时间类型没有秒以下级别的存储类型</td>
+<td>可以精确到秒以下。</td>
+</tr>
+<tr>
+<td>身份验证功能是完全内置的，不支持操作系统认证、PAM认证，不支持LDAP以及其它类似的外部身份验证功能。</td>
+<td>支持OS认证、Kerberos 认证 、Ident 的认证、LDAP 认证、PAM 认证</td>
+</tr>
+<tr>
+<td>不支持database link。有一种叫做Federated的存储引擎可以作为一个中转将查询语句传递到远程服务器的一个表上,不过,它功能很粗糙并且漏洞很多</td>
+<td>有dblink，同时还有一个dbi-link的东西，可以连接到oracle和mysql上。</td>
+</tr>
+<tr>
+<td>Mysql Cluster可能与你的想象有较大差异。开源的cluster软件较少。 复制(Replication)功能是异步的,并且有很大的局限性.例如,它是单线程的(single-threaded),因此一个处理能力更强的Slave的恢复速度也很难跟上处理能力相对较慢的Master.</td>
+<td>有丰富的开源cluster软件支持。</td>
+</tr>
+<tr>
+<td>explain看执行计划的结果简单。</td>
+<td>explain返回丰富的信息。</td>
+</tr>
+<tr>
+<td>类似于ALTER TABLE或CREATE TABLE一类的操作都是非事务性的.它们会提交未提交的事务，并且不能回滚也不能做灾难恢复</td>
+<td>DDL也是有事务的。</td>
+</tr>
+</tbody></table>
+<p><strong>PostgreSQL主要优势：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><pre><code class="hljs http">　1. PostgreSQL完全免费，而且是BSD协议，如果你把PostgreSQL改一改，然后再拿去卖钱，也没有人管你，这一点很重要，这表明了PostgreSQL数据库不会被其它公司控制。oracle数据库不用说了，是商业数据库，不开放。而MySQL数据库虽然是开源的，但现在随着SUN被oracle公司收购，现在基本上被oracle公司控制，其实在SUN被收购之前，MySQL中最重要的InnoDB引擎也是被oracle公司控制的，而在MySQL中很多重要的数据都是放在InnoDB引擎中的，反正我们公司都是这样的。所以如果MySQL的市场范围与oracle数据库的市场范围冲突时，oracle公司必定会牺牲MySQL，这是毫无疑问的。<br>2.	与PostgreSQl配合的开源软件很多，有很多分布式集群软件，如pgpool、pgcluster、slony、plploxy等等，很容易做读写分离、负载均衡、数据水平拆分等方案，而这在MySQL下则比较困难。<br>3. PostgreSQL源代码写的很清晰，易读性比MySQL强太多了，怀疑MySQL的源代码被混淆过。所以很多公司都是基本PostgreSQL做二次开发的。<br>4. PostgreSQL在很多方面都比MySQL强，如复杂SQL的执行、存储过程、触发器、索引。同时PostgreSQL是多进程的，而MySQL是线程的，虽然并发不高时，MySQL处理速度快，但当并发高的时候，对于现在多核的单台机器上，MySQL的总体处理性能不如PostgreSQL，原因是MySQL的线程无法充分利用CPU的能力。<br></code></pre></td></tr></table></figure>
+
+<p><strong>MySQL相对于PG的优势</strong></p>
+<p>1.innodb的基于回滚段实现的MVCC机制，相对PG新老数据一起存放的基于XID的MVCC机制，是占优的。新老数据一起存放，需要定时触 发VACUUM，会带来多余的IO和数据库对象加锁开销，引起数据库整体的并发能力下降。而且VACUUM清理不及时，还可能会引发数据膨胀。</p>
+<p>2.MySQL采用索引组织表，这种存储方式非常适合基于主键匹配的查询、删改操作，但是对表结构设计存在约束。</p>
+<p>3.MySQL的优化器较简单，系统表、运算符、数据类型的实现都很精简，非常适合简单的查询操作。</p>
+<p>4.MySQL相对于PG在国内的流行度更高，PG目前在国使用量相对少。</p>
+<p>5.MySQL的存储引擎插件化机制，使得它的应用场景更加广泛，比如除了innodb适合事务处理场景外，myisam适合静态数据的查询场景。</p>
+<h1 id="2-总结pg二进制安装和编译安装。"><a href="#2-总结pg二进制安装和编译安装。" class="headerlink" title="2 总结pg二进制安装和编译安装。"></a>2 总结pg二进制安装和编译安装。</h1><h2 id="2-1-二进制安装"><a href="#2-1-二进制安装" class="headerlink" title="2.1 二进制安装"></a>2.1 二进制安装</h2><p>各linux发行版中大多都内置了PGSQL的二进制安装包，但内置版本相对旧一些，对于二进制包的安装方法是通过不同发行版本的Linux下的包管理器进行的，如在RHEL系统相关版本下用yum命令，在Ubuntu下用apt命令。</p>
+<h2 id="2-2-源码编译安装"><a href="#2-2-源码编译安装" class="headerlink" title="2.2 源码编译安装"></a>2.2 源码编译安装</h2><h3 id="2-2-1-编译安装过程说明"><a href="#2-2-1-编译安装过程说明" class="headerlink" title="2.2.1 编译安装过程说明"></a>2.2.1 编译安装过程说明</h3><p>第一步：下载源代码</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">https://www.postgresql.org/ftp/source/<br>https://mirrors.aliyun.com/postgresql/source/<br></code></pre></td></tr></table></figure>
+
+<p>第二步：编译安装。过程与Linux下其他软件的编译安装过程相同</p>
+<ul>
+<li>./configure</li>
+<li>make</li>
+<li>make install</li>
+</ul>
+<p>第三步：编译安装完成后执行如下步骤</p>
+<ul>
+<li>使用initdb命令初使用化数据库</li>
+<li>启动数据库实例</li>
+</ul>
+<h3 id="2-2-2-系统初始化和优化配置"><a href="#2-2-2-系统初始化和优化配置" class="headerlink" title="2.2.2 系统初始化和优化配置"></a>2.2.2 系统初始化和优化配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">关闭防火墙和SELinux等</span><br>systemctl disable firewalld<br>sed -i &#x27;/^SELINUX=/c SELINUX=Disabled&#x27;  /etc/selinux/config<br><span class="hljs-meta prompt_">#</span><span class="language-bash">内核参数优化</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">vi /etc/sysctl.conf</span><br>kernel.shmmax=68719476736（CentosS6以前版本默认值，CentoS7默认为18446744073692774399)<br>kernel.shma11 = 4294967296（CentoS6以前版本默认值，CentoS7默认为18446744073692774399)<br>kernel.shmmni = 4096<br>kernel.sem = 50100 64128000 50100 1280<br>fs.file-max = 7672460<br>net.ipv4.ip_local_port_range = 9000 65000<br>net.core.rmem_default = 1048576<br>net.core.rmem_max = 4194304<br>net.core.wmem_default = 262144<br>net.core.wmem_max = 1048576<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">vim /etc/security/limits.conf</span><br>* - nofile 100000<br>* - nproc 100000<br>* - memlock 60000<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-3-安装依赖包"><a href="#2-2-3-安装依赖包" class="headerlink" title="2.2.3 安装依赖包"></a>2.2.3 安装依赖包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">RHEL系统</span><br>yum install -y gcc make readline-devel zlib-devel<br><span class="hljs-meta prompt_">#</span><span class="language-bash">ubuntu</span><br>apt update<br>apt install -y gcc make libreadline-dev zlib1g-dev<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-4-源码编译安装"><a href="#2-2-4-源码编译安装" class="headerlink" title="2.2.4 源码编译安装"></a>2.2.4 源码编译安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载解压缩</span><br>[21:41:20 root@rocky8 ~]#wget https://mirrors.aliyun.com/postgresql/source/v12.9/postgresql-12.9.tar.gz<br>[21:45:00 root@rocky8 ~]#tar xf postgresql-12.9.tar.gz <br>[21:45:10 root@rocky8 ~]#cd postgresql-12.9/<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看安装说明</span><br>[21:47:48 root@rocky8 postgresql-12.9]#cat /root/postgresql-12.9/INSTALL<br> 	./configure<br>    make<br>    su<br>    make install<br>    adduser postgres<br>    mkdir /usr/local/pgsql/data<br>    chown postgres /usr/local/pgsql/data<br>    su - postgres<br>    /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data<br>    /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l logfile start<br>    /usr/local/pgsql/bin/createdb test<br>    /usr/local/pgsql/bin/psql test<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">开始编译三步曲，默认安装在/usr/local/pgsq1</span><br>[21:52:14 root@rocky8 postgresql-12.9]#./configure --prefix=/apps/pgsql --with-pgport=5432<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看编译选项（可选）</span><br><br><br>[21:57:11 root@rocky8 postgresql-12.9]#make -j 3 world  #默认make不包括文档和其他模块<br>[22:00:16 root@rocky8 postgresql-12.9]#make install-world  #默认make install不包括文档和其他模块<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-5-创建数据库用户和组"><a href="#2-2-5-创建数据库用户和组" class="headerlink" title="2.2.5  创建数据库用户和组"></a>2.2.5  创建数据库用户和组</h3><p>PostgreSQL默认不支持以root身份启动服务，虽然也可修改源码实现root启动，但基于安全考虑不建议，因此必须创建一个用于启动PostgrepSQL的普通用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建数据库用户和组，注意此用户需要可以交互登录</span><br>[22:07:25 root@rocky8 ~]#useradd -s /bin/bash -m -d /home/postgres postgres<br>[22:08:47 root@rocky8 ~]#echo -e &#x27;123456\n123456&#x27; | passwd postgres<br>[22:11:34 root@rocky8 ~]#echo postgres:123456 | chpasswd<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-6创建数据目录并授权"><a href="#2-2-6创建数据目录并授权" class="headerlink" title="2.2.6创建数据目录并授权"></a>2.2.6创建数据目录并授权</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:11:46 root@rocky8 ~]#mkdir -pv /pgsql/data/<br>[22:13:28 root@rocky8 ~]#chown postgres. /pgsql/data/<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-7设置环境变量"><a href="#2-2-7设置环境变量" class="headerlink" title="2.2.7设置环境变量"></a>2.2.7设置环境变量</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:14:38 root@rocky8 ~]#vim /etc/profile.d/pgsql.sh<br>[22:19:11 root@rocky8 ~]#cat /etc/profile.d/pgsql.sh<br>export PGHOME=/apps/pgsql<br>export PATH=$PGHOME/bin/:$PATH<br>export PGDATA=/pgsql/data<br>export PGUSER=postgres<br>export MANPATH=/apps/pgsql/share/man:$MANPATH<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">验证</span><br>[22:19:15 root@rocky8 ~]#su - postgres<br>[22:20:22 postgres@rocky8 ~]$psql --version<br>psql (PostgreSQL) 12.9<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-8初始化数据库"><a href="#2-2-8初始化数据库" class="headerlink" title="2.2.8初始化数据库"></a>2.2.8初始化数据库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:19:15 root@rocky8 ~]#su - postgres<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">初始化</span><br>[22:20:45 postgres@rocky8 ~]$initdb  #前面加了环境变量，所以这里可以不加其他选项<br><br>initdb -D $PGDATA<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果没有指定选项-D&lt;datadir&gt;，按环境变量<span class="hljs-variable">$PGDATA</span>指定的路径进行初始化</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">生产建议初始化方式</span><br>initdb -A md5 -D $PGDATA -E utf8 --locale=C -U postgres -W<br>-A	#指定local connections默认的身份验证方法<br>-D	#指定数据目录<br>-E 	#指定字符集<br>--locale=C	#指定语言环境<br>-U 	#指定数据库superuser用户名<br>-W	#指定数据库superuser的用户密码<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-9-启动和关闭服务"><a href="#2-2-9-启动和关闭服务" class="headerlink" title="2.2.9 启动和关闭服务"></a>2.2.9 启动和关闭服务</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">启动</span><br>[22:22:34 postgres@rocky8 ~]$pg_ctl -l logfile start <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">停止</span><br>[22:28:42 postgres@rocky8 ~]$pg_ctl stop<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动命令：</span><br>pg_ctl -D /pgsq1/data -1 logfile start<br>postgres -D /pgsq1/data &amp;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">停止数据库的命令如下：</span><br>pg_ct1 stop -D $PGDATA [-m SHUTDOWN-MODE]<br>其中-m是指定数据库的停止方法，有以下三种：<br>smart：等所有的连接中止后，关闭数据库。如果客户端连接不终止，则无法关闭数据库。<br>fast：快速关闭数据库，断开客户端的连接，让已有的事务回滚，然后正常关闭数据库。相当于oracle数据库关闭时的immediate模式。此为默认值，建议使用<br>immediate：立即关闭数据库，相当于数据库进程立即停止，直接退出，下次启动数据库需要进行恢复。相当于oracle数据库关闭时的 abort模式<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">smart关闭</span><br>pg_ctl stop -D /pgsq1/data/ -ms<br><span class="hljs-meta prompt_">#</span><span class="language-bash">fast关闭，推荐使用，也是默认模式</span><br>pg_ctl stop -D /pgsq1/data/ -mf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">immediate 相当于ki11-9</span><br>pg_ctl stop -D /pgsq1/data/ -mi<br><span class="hljs-meta prompt_">#</span><span class="language-bash">或者发送信号，直接向数据库主进程发送的signal信号有以下三种。</span><br>SIGTERM:发送此信号为Smart Shutdown关机模式。<br>SIGINT：发送此信号为Fast Shutdown关机模式。<br>SIGQUIT：发送此信号为Immediate Shutdown关机模式。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启</span><br>pg_ctl restart -mf<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">源码目录中内置PostgresQL的启动脚本</span><br>postgresql-12.9/contrib/start-scripts/linux<br></code></pre></td></tr></table></figure>
+
+<p>范例：实现开机自启动PostgreSQL</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:49:16 root@rocky8 ~]#cp  postgresql-12.9/contrib/start-scripts/linux /etc/init.d/postgressql<br>[22:53:09 root@rocky8 ~]#chmod +x /etc/init.d/postgressql <br>[22:53:50 root@rocky8 ~]#chkconfig --add postgressql<br><br>[22:51:44 root@rocky8 ~]#vim /etc/init.d/postgressql <br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改下面两行</span><br>prefix=/apps/pgsql<br>PGDATA=&quot;/pgsql/data&quot;<br><br><br>[22:54:28 root@rocky8 ~]#service postgressql start <br></code></pre></td></tr></table></figure>
+
+<p>范例：创建 service 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建新的service文件</span><br>[23:00:02 root@rocky8 ~]#vim /lib/systemd/system/postgresql.service<br>[23:07:25 root@rocky8 ~]#cat /lib/systemd/system/postgresql.service <br>[23:14:29 root@rocky8 ~]#cat /lib/systemd/system/postgresql.service <br>[Unit]<br>Description=PostgreSQL database server<br>After=network.target<br><br><br>[Service]<br>User=postgres<br>Group=postgres<br><br>ExecStart=/apps/pgsql/bin/postmaster -D /pgsql/data<br>ExecReload=/bin/kill -HUP<br><br><br>[Install]<br>WantedBy=multi-user.target<br><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">确认文件内容</span><br>[23:09:34 root@rocky8 ~]#systemctl daemon-reload<br>[23:09:47 root@rocky8 ~]#systemctl cat postgresql.service<br><span class="hljs-meta prompt_"># </span><span class="language-bash">/usr/lib/systemd/system/postgresql.service</span><br>[23:14:29 root@rocky8 ~]#cat /lib/systemd/system/postgresql.service <br>[Unit]<br>Description=PostgreSQL database server<br>After=network.target<br><br><br>[Service]<br>User=postgres<br>Group=postgres<br><br>ExecStart=/apps/pgsql/bin/postmaster -D /pgsql/data<br>ExecReload=/bin/kill -HUP<br><br><br>[Install]<br>WantedBy=multi-user.target<br><br><br>[23:25:49 root@rocky8 ~]#systemctl enable --now postgresql<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-10-查看编译和相关信息"><a href="#2-2-10-查看编译和相关信息" class="headerlink" title="2.2.10 查看编译和相关信息"></a>2.2.10 查看编译和相关信息</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell">[14:42:03 root@rocky8 ~]#pg_config<br>BINDIR = /apps/pgsql/bin<br>DOCDIR = /apps/pgsql/share/doc<br>HTMLDIR = /apps/pgsql/share/doc<br>INCLUDEDIR = /apps/pgsql/include<br>PKGINCLUDEDIR = /apps/pgsql/include<br>INCLUDEDIR-SERVER = /apps/pgsql/include/server<br>LIBDIR = /apps/pgsql/lib<br>PKGLIBDIR = /apps/pgsql/lib<br>LOCALEDIR = /apps/pgsql/share/locale<br>MANDIR = /apps/pgsql/share/man<br>SHAREDIR = /apps/pgsql/share<br>SYSCONFDIR = /apps/pgsql/etc<br>PGXS = /apps/pgsql/lib/pgxs/src/makefiles/pgxs.mk<br>CONFIGURE = &#x27;--prefix=/apps/pgsql&#x27; &#x27;--with-pgport=5432&#x27;<br>CC = gcc<br>CPPFLAGS = -D_GNU_SOURCE<br>CFLAGS = -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Werror=vla -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -Wno-format-truncation -Wno-stringop-truncation -O2<br>CFLAGS_SL = -fPIC<br>LDFLAGS = -Wl,--as-needed -Wl,-rpath,&#x27;/apps/pgsql/lib&#x27;,--enable-new-dtags<br>LDFLAGS_EX = <br>LDFLAGS_SL = <br>LIBS = -lpgcommon -lpgport -lpthread -lz -lreadline -lrt -lcrypt -ldl -lm <br>VERSION = PostgreSQL 12.9<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-11-源码编译安装脚本"><a href="#2-2-11-源码编译安装脚本" class="headerlink" title="2.2.11 源码编译安装脚本"></a>2.2.11 源码编译安装脚本</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash"><span class="hljs-comment">#***************************************************************************</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Author:		tangbeiting</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">QQ:			306876058</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Date:			2023-09-16</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">FileName:		postgresql_src_install.sh</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">URL:			https://xiaohexie00.github.io/</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Description:		The <span class="hljs-built_in">test</span> script</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Copyright (C):	2023 ALL rights reserved</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">**************************************************************************</span><br>POSTGRESQL_VERSION=12.9<br>INSTALL_DIR=/aaps/pgsql<br>DATA_DIR=/pgsql/data/<br>PORT=5432<br>CPUS=4<br>DB_USER=postgres<br><br>. /etc/os-release<br><br>color () &#123;<br>    RES_COL=60<br>    MOVE_TO_COL=&quot;echo -en \\033[$&#123;RES_COL&#125;G&quot;<br>    SETCOLOR_SUCCESS=&quot;echo -en \\033[1;32m&quot;<br>    SETCOLOR_FAILURE=&quot;echo -en \\033[1;31m&quot;<br>    SETCOLOR_WARNING=&quot;echo -en \\033[1;33m&quot;<br>    SETCOLOR_NORMAL=&quot;echo -en \E[0m&quot;<br>    echo -n &quot;$1&quot; &amp;&amp; $MOVE_TO_COL<br>    echo -n &quot;[&quot;<br>    if [ $2 = &quot;success&quot; -o $2 = &quot;0&quot; ] ;then<br>        $&#123;SETCOLOR_SUCCESS&#125;<br>        echo -n $&quot;  OK  &quot;    <br>    elif [ $2 = &quot;failure&quot; -o $2 = &quot;1&quot;  ] ;then <br>        $&#123;SETCOLOR_FAILURE&#125;<br>        echo -n $&quot;FAILED&quot;<br>    else<br>        $&#123;SETCOLOR_WARNING&#125;<br>        echo -n $&quot;WARNING&quot;<br>    fi<br>    $&#123;SETCOLOR_NORMAL&#125;<br>    echo -n &quot;]&quot;<br>    echo <br>&#125;<br><br>install_postgresql () &#123;<br>    if [ $ID = &#x27;rocky&#x27; -o $ID = &#x27;centos&#x27; ] ; then<br>        yum install -y gcc make readline-devel zlib-devel wget<br>    elif [ $ID = &#x27;ubuntu&#x27; ] ;then<br>        apt update<br>        apt install -y gcc make libreadline-dev zlib1g-dev wget<br>    else<br>        color &quot;不支持此操作系统，退出！&quot; 1<br>        exit<br>    fi<br>    <br>    if [ ! -f postgresql-$&#123;POSTGRESQL_VERSION&#125;.tar.gz  ] ; then<br>        wget https://mirrors.aliyun.com/postgresql/source/v$&#123;POSTGRESQL_VERSION&#125;/postgresql-$&#123;POSTGRESQL_VERSION&#125;.tar.gz<br>    fi<br>    <br>    tar xf postgresql-$&#123;POSTGRESQL_VERSION&#125;.tar.gz<br>    cd postgresql-$&#123;POSTGRESQL_VERSION&#125;/<br>    ./configure --prefix=$&#123;INSTALL_DIR&#125;  --with-pgport=$PORT<br>    make -j $CPUS world<br>    make install-world<br>    <br>    useradd -s /bin/bash -m -d /home/$DB_USER $DB_USER<br>    echo -e &#x27;123456\n123456&#x27; | passwd $DB_USER<br>    <br>    mkdir -pv $&#123;DATA_DIR&#125;<br>    chown $DB_USER.$DB_USER $&#123;DATA_DIR&#125;<br>    <br>    cat &gt; /etc/profile.d/pgsql.sh &lt;&lt;EOF<br>export PGHOME=$&#123;INSTALL_DIR&#125;<br>export PATH=$&#123;INSTALL_DIR&#125;/bin/:\$PATH<br>export PGDATA=/pgsql/data<br>export PGUSER=postgres<br>export MANPATH=$&#123;INSTALL_DIR&#125;/share/man:$MANPATH<br>EOF<br>    <br>   su - $DB_USER -c &#x27;initdb&#x27;  <br>&#125;    <br> <br><br><br>start_service () &#123; <br>    cat &gt; /lib/systemd/system/postgresql.service &lt;&lt;EOF    <br>[Unit]<br>Description=PostgreSQL database server<br>After=network.target<br><br>[Service]<br>User=postgres<br>Group=postgres<br><br>ExecStart=$&#123;INSTALL_DIR&#125;/bin/postmaster -D $&#123;DATA_DIR&#125;<br>ExecReload=/bin/kill -HUP $MAINPID<br><br>[Install]<br>WantedBy=multi-user.target<br>EOF<br><br>    systemctl daemon-reload<br>    systemctl enable --now postgresql<br>    systemctl is-active postgresql.service<br>    if [ $? -eq 0 ] ; then<br>        color &quot;PostgreSQL 安装成功!&quot; 0<br>    else<br>        color &quot;PostgreSQL 安装失败!&quot; 1<br>        exit 1<br>    fi<br>&#125;<br><br>install_postgresql<br>start_service<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="3-总结pg服务管理相关命令-pg-ctl-和pgsql命令选项及示例和不同系统的初始化操作"><a href="#3-总结pg服务管理相关命令-pg-ctl-和pgsql命令选项及示例和不同系统的初始化操作" class="headerlink" title="3 总结pg服务管理相关命令 pg_ctl 和pgsql命令选项及示例和不同系统的初始化操作"></a>3 总结pg服务管理相关命令 pg_ctl 和pgsql命令选项及示例和不同系统的初始化操作</h1><h2 id="3-1-pg-ctl-命令管理PostgreSQL"><a href="#3-1-pg-ctl-命令管理PostgreSQL" class="headerlink" title="3.1 pg_ctl 命令管理PostgreSQL"></a>3.1 pg_ctl 命令管理PostgreSQL</h2><p>pg_ctl是一个实用的命令行工具，有以下常见功能：</p>
+<ul>
+<li>初始化 PostgresQL数据库实例</li>
+<li>启动、终止或重启PostgresQL数据库服务。</li>
+<li>查看PostgreSQL数据库服务的状态</li>
+<li>让数据库实例重新读取配置文件。允许给一个指定的PostgresQL进程发送信号</li>
+<li>控制 standby 服务器为可读写</li>
+<li>在Windows平台下允许为数据库实例注册或取消一个系统服务</li>
+</ul>
+<p>pc_ctl 命令格式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">[16:58:00 root@rocky8 ~]#pg_ctl --help<br>pg_ctl is a utility to initialize, start, stop, or control a PostgreSQL server.<br><br>Usage:<br>  pg_ctl init[db]   [-D DATADIR] [-s] [-o OPTIONS]<br>  pg_ctl start      [-D DATADIR] [-l FILENAME] [-W] [-t SECS] [-s]<br>                    [-o OPTIONS] [-p PATH] [-c]<br>  pg_ctl stop       [-D DATADIR] [-m SHUTDOWN-MODE] [-W] [-t SECS] [-s]<br>  pg_ctl restart    [-D DATADIR] [-m SHUTDOWN-MODE] [-W] [-t SECS] [-s]<br>                    [-o OPTIONS] [-c]<br>  pg_ctl reload     [-D DATADIR] [-s]<br>  pg_ctl status     [-D DATADIR]<br>  pg_ctl promote    [-D DATADIR] [-W] [-t SECS] [-s]<br>  pg_ctl logrotate  [-D DATADIR] [-s]<br>  pg_ctl kill       SIGNALNAME PID<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2初始化实例"><a href="#3-2初始化实例" class="headerlink" title="3.2初始化实例"></a>3.2初始化实例</h3><p>初始化PostgresQL数据库实例的命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">先切换用户</span><br>su - postgres<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">初始化数据库</span><br>initdb [DATADIR]<br>pg_ctl init[db] [-s] [-D DATADIR] [-o options]<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">pg_ctl命令调用initdb命令创建了一个新的PostgresQL数据库实例，参数说明如下。</span><br>-s	#只打印错误和警告信息，不打印提示性信息。<br>-D DATADIR	#指定数据库实例的数据目录。如果没有指定DATADIR，使用环境变量PGDATA指定的路径<br>-o options 	#为直接传递给initdb命令的参数<br></code></pre></td></tr></table></figure>
+
+<p>范例：创建新的数据库实例数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell">[17:31:01 root@Master-DNS ~]#chown postgres: /pgsql/<br>[17:31:38 root@Master-DNS ~]#ls -dl /pgsql<br>drwxr-xr-x 3 postgres postgres 18 Sep 16 16:51 /pgsql<br>[17:31:48 root@Master-DNS ~]#su - postgres<br>Last login: Sat Sep 16 17:30:43 CST 2023 on pts/2<br>[17:31:57 postgres@Master-DNS ~]$pg_ctl init -D /pgsql/data2<br>The files belonging to this database system will be owned by user &quot;postgres&quot;.<br>This user must also own the server process.<br><br>The database cluster will be initialized with locale &quot;en_US.UTF-8&quot;.<br>The default database encoding has accordingly been set to &quot;UTF8&quot;.<br>The default text search configuration will be set to &quot;english&quot;.<br><br>Data page checksums are disabled.<br><br>creating directory /pgsql/data2 ... ok<br>creating subdirectories ... ok<br>selecting dynamic shared memory implementation ... posix<br>selecting default max_connections ... 100<br>selecting default shared_buffers ... 128MB<br>selecting default time zone ... Asia/Shanghai<br>creating configuration files ... ok<br>running bootstrap script ... ok<br>performing post-bootstrap initialization ... ok<br>syncing data to disk ... ok<br><br>initdb: warning: enabling &quot;trust&quot; authentication for local connections<br>You can change this by editing pg_hba.conf or using the option -A, or<br>--auth-local and --auth-host, the next time you run initdb.<br><br>Success. You can now start the database server using:<br><br>    /aaps/pgsql/bin/pg_ctl -D /pgsql/data2 -l logfile start<br><br><br>[17:34:20 postgres@Master-DNS ~]$ls /pgsql/data2<br>base          pg_dynshmem    pg_logical    pg_replslot   pg_stat      pg_tblspc    pg_wal                postgresql.conf<br>global        pg_hba.conf    pg_multixact  pg_serial     pg_stat_tmp  pg_twophase  pg_xact<br>pg_commit_ts  pg_ident.conf  pg_notify     pg_snapshots  pg_subtrans  PG_VERSION   postgresql.auto.conf<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3服务管理"><a href="#3-3服务管理" class="headerlink" title="3.3服务管理"></a>3.3服务管理</h3><h4 id="3-3-1查看服务状态"><a href="#3-3-1查看服务状态" class="headerlink" title="3.3.1查看服务状态"></a>3.3.1查看服务状态</h4><p>查询数据库实例状态的命令如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">pg_ctl status [-D datadir]<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs http">[17:34:55 postgres@Master-DNS ~]$pg_ctl status -D /pgsql/data2<br>pg_ctl: no server running<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-2启动服务"><a href="#3-3-2启动服务" class="headerlink" title="3.3.2启动服务"></a>3.3.2启动服务</h4><p>启动PostgreSQL服务的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">pg_ctl start [-w] [-t seconds] [-s] [-D datadir] [-1 filename] [-o options] [-ppath] [-c]<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">参数说明如下。</span><br>start	#启动数据库实例<br>-w	#等待启动完成-t#等待启动完成的等待秒数，默认为60秒<br>-s	#只打印错误和警告信息，不打印提示性信息<br>-D datadir	#指定数据库实例的数据目录<br>-l	#服务器日志输出附加在“filename”文件上，如果该文件不存在则创建它<br>-o options #声明要直接传递给postgres的选项，具体可见postgres命令的帮助<br>-p path #指定postgres可执行文件的位置。默认情况下postgres可执行文件来自和pg_ct1相同的目录,不必使用该选项。除非要进行一些不同寻常的操作，或者产生了postgres执行文件找不到的错误<br>-c	#提高服务器的软限制（ulimit-c），尝试允许数据库实例在有异常时产生一个coredump文件，以便于问题定位和故障分析<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">[17:40:57 postgres@Master-DNS ~]$pg_ctl status -D /pgsql/data2<br>[17:41:42 postgres@Master-DNS ~]$pg_ctl start -D /pgsql/data2<br>waiting for server to start....2023-09-16 17:41:47.177 CST [14233] LOG:  starting PostgreSQL 12.9 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18), 64-bit<br>2023-09-16 17:41:47.178 CST [14233] LOG:  listening on IPv6 address &quot;::1&quot;, port 5432<br>2023-09-16 17:41:47.178 CST [14233] LOG:  listening on IPv4 address &quot;127.0.0.1&quot;, port 5432<br>2023-09-16 17:41:47.178 CST [14233] LOG:  listening on Unix socket &quot;/tmp/.s.PGSQL.5432&quot;<br>2023-09-16 17:41:47.185 CST [14234] LOG:  database system was shut down at 2023-09-16 17:32:32 CST<br>2023-09-16 17:41:47.186 CST [14233] LOG:  database system is ready to accept connections<br> done<br>server started<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-3停止服务"><a href="#3-3-3停止服务" class="headerlink" title="3.3.3停止服务"></a>3.3.3停止服务</h4><p>停止PostgresQL数据库的命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">pg_ctl stop [-w] [-t seconds] [-s] [-D datadir] [-m s[mart] 1 f[ast] | i[mmediate] ]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">参数说明如下。</span><br>-W	#不等待数据库停下来，命令就返回。<br>-m	#指定停止的模式。前面已叙述过停止的几种模式了。#其它未说明的参数，其含义与启动数据库命令中的参数相同。<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">[17:42:00 postgres@Master-DNS ~]$pg_ctl stop -D /pgsql/data2<br>waiting for server to shut down....2023-09-16 17:44:45.968 CST [14233] LOG:  received fast shutdown request<br>2023-09-16 17:44:45.969 CST [14233] LOG:  aborting any active transactions<br>2023-09-16 17:44:45.969 CST [14233] LOG:  background worker &quot;logical replication launcher&quot; (PID 14240) exited with exit code 1<br>2023-09-16 17:44:45.970 CST [14235] LOG:  shutting down<br>2023-09-16 17:44:45.974 CST [14233] LOG:  database system is shut down<br> done<br>server stopped<br>[17:44:46 postgres@Master-DNS ~]$pg_ctl status -D /pgsql/data2<br>pg_ctl: no server running<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-2-4重启服务"><a href="#2-3-2-4重启服务" class="headerlink" title="2.3.2.4重启服务"></a>2.3.2.4重启服务</h4><p>重启PostgresQL数据库的命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">pg_ctl restart [-w] [-t seconds][-s] [-D datadir] [-c] [-m s[mart] [ f[ast] [i[mmediate] ] [-o &quot;options ]<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">此命令中的参数与启动或停止命令中的参数含义相同</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-4加载配置"><a href="#3-3-4加载配置" class="headerlink" title="3.3.4加载配置"></a>3.3.4加载配置</h4><p>在配置文件中改变参数后，需要使用上面这条命令使参数生效</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改配置文件 postgresql.conf后，让修改生效的方法有两种</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法一：在操作系统使用下面命令</span><br>pg_ctl reload [-s] [-D datadir]<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法二：在psql中使用如下命令</span><br>postgres=# select pg_reload_conf();<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">注意：加载配置操作只针对一些配置的修改生效，有些配置需要重新启动服务才能生效</span><br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">注意：修改端口不支持reload,只能restart</span><br>[17:49:29 postgres@Master-DNS ~]$vim /pgsql/data2/postgresql.conf <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改端口</span><br>[17:50:14 postgres@Master-DNS ~]$echo port=5433 &gt;&gt; /pgsql/data2/postgresql.conf <br>[17:50:33 postgres@Master-DNS ~]$pg_ctl reload -D /pgsql/data2<br>pg_ctl: PID file &quot;/pgsql/data2/postmaster.pid&quot; does not exist<br>Is server running?<br>[17:50:43 postgres@Master-DNS ~]$pg_ctl start -D /pgsql/data2<br>waiting for server to start....2023-09-16 17:50:55.079 CST [14276] LOG:  starting PostgreSQL 12.9 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18), 64-bit<br>2023-09-16 17:50:55.079 CST [14276] LOG:  listening on IPv6 address &quot;::1&quot;, port 5433<br>2023-09-16 17:50:55.079 CST [14276] LOG:  listening on IPv4 address &quot;127.0.0.1&quot;, port 5433<br>2023-09-16 17:50:55.080 CST [14276] LOG:  listening on Unix socket &quot;/tmp/.s.PGSQL.5433&quot;<br>2023-09-16 17:50:55.090 CST [14277] LOG:  database system was shut down at 2023-09-16 17:44:45 CST<br>2023-09-16 17:50:55.091 CST [14276] LOG:  database system is ready to accept connections<br> done<br>server started<br>[17:50:55 postgres@Master-DNS ~]$ss -ntl<br>State          Recv-Q         Send-Q                 Local Address:Port                 Peer Address:Port         Process         <br>LISTEN         0              128                          0.0.0.0:22                        0.0.0.0:*                            <br>LISTEN         0              244                        127.0.0.1:5432                      0.0.0.0:*                            <br>LISTEN         0              244                        127.0.0.1:5433                      0.0.0.0:*                                                      <br>LISTEN         0              244                            [::1]:5432                         [::]:*                            <br>LISTEN         0              244                            [::1]:5433                         [::]:*  <br></code></pre></td></tr></table></figure>
+
+<h1 id="4-总结pg数据库结构组织"><a href="#4-总结pg数据库结构组织" class="headerlink" title="4 总结pg数据库结构组织"></a>4 总结pg数据库结构组织</h1><h3 id="4-1数据库的结构组织"><a href="#4-1数据库的结构组织" class="headerlink" title="4.1数据库的结构组织"></a>4.1数据库的结构组织</h3><p><img src="image-20230916175616026.png" srcset="/img/loading.gif" lazyload alt="image-20230916175616026"></p>
+<p>在一个PostgreSQL数据库系统中，数据的组织结构可以分为以下五层：</p>
+<ul>
+<li><p>实例：一个PostgreSQL对应一个安装的数据目录$PGDATA,即一个instance实例</p>
+</li>
+<li><p>数据库：一个PostgresQL数据库服务下可以管理多个数据库，当应用连接到一个数据库时，一般只能访问这个数据库中的数据，而不能访问其他数据库中的内容</p>
+<p>默认情况下初始实例只有三个数据库：postgres、templateo、template1</p>
+</li>
+<li><p>模式：一个数据库可以创建多个不同的名称空间即Schema,用于分隔不同的业务数据</p>
+</li>
+<li><p>表和索引：一个数据库可以有多个表和索引。在PostgreSQL中表的术语称为Relation，而在其他数据库中通常叫Table</p>
+</li>
+<li><p>行和列：每张表中有很多列和行数据。在PostgreSQL中行的术语一般为“Tuple”，而在其他数据库中则叫”Row”。</p>
+</li>
+</ul>
+<h3 id="4-2-PostgreSQL中的术语"><a href="#4-2-PostgreSQL中的术语" class="headerlink" title="4.2 PostgreSQL中的术语"></a>4.2 PostgreSQL中的术语</h3><p>PostgreSQL有一些术语与其他数据库中不一样，了解了这些术语的意思，就能更好地看懂PostgreSQL中的文档。</p>
+<p>与其他数据库不同的术语如下。</p>
+<ul>
+<li>Relation:表示表table或索引index,具体表示的是Table还是Index需要看具体情况</li>
+<li>Tuple：表示表中的行，在其他数据库中使ROW来表示</li>
+<li>Segment:每个表和索引都单独对应一个文件,即为segment,如果文件大小超过1GB,会创建多个相同名称但后缀不同的文件</li>
+<li>Page：表示在磁盘中的数据块。在文件中以块为单位存放数据，默认值为8KB,最大可以为32KB</li>
+<li>Buffer：表示在内存中的数据块。</li>
+</ul>
+<p>范例：编译时可以指定segment大小</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">[18:00:19 root@rocky8 postgresql-12.9]#./configure --help | grep segment<br>  --with-segsize=SEGSIZE  set table segment size in GB [1]<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3模版数据库template0和template1"><a href="#4-3模版数据库template0和template1" class="headerlink" title="4.3模版数据库template0和template1"></a>4.3模版数据库template0和template1</h3><p>template1和template0是PostgreSQL的模板数据库。所谓模板数据库就是创建新database时,PostgreSQL会基于模板数据库制作一份副本，其中会包含所有的数据库设置和数据文件。</p>
+<p>PostgreSQL安装好以后会默认附带两个模板数据库：默认模板库为template1和template1。</p>
+<p>默认模板库为template1,也可以指定template0</p>
+<p>比如:create database db1 template template0</p>
+<p>不要对templateo模板数据库进行任何修改，因为这是原始的干净模板</p>
+<p>如果其它模板数据库被搞坏了，基于这个数据库做一个副本就可以了。</p>
+<p>如果希望定制自己的模板数据库，那么请基于template1进行修改，或者自己另外创建一个模板数据库再修改。</p>
+<p>template1和template0的区别主要有两点：</p>
+<ol>
+<li>template1可以连接,template0不可以连接。</li>
+<li>使用template1模板库建库时不可指定新的encoding和locale,而template0可以。</li>
+</ol>
+<p>注意：template0和template1都不能被删除。</p>
+<h3 id="4-4模式schema"><a href="#4-4模式schema" class="headerlink" title="4.4模式schema"></a>4.4模式schema</h3><p>模式schema是数据库中的一个概念，可以将其理解为一个命名空间。不同的模式下可以有相同名称的表、函数等对象且互相不冲突。提出模式的概念是为了便于管理，只要有权限，每个模式(schema)的对象可以互相调用。</p>
+<p>在PostgreSQL中，一个数据库包含一个或多个模式，一个模式中又包含了表、函数及操作符等数据库对象。</p>
+<p>在PostgresQL中，不能同时访问不同数据库中的对象，当要访问另一个数据库中的表或其他对象时，需要重新连接到这个新的数据库，而模式没有此限制。一个用户在连接到一个数据库后，就可以同时访问这个数据库中多个模式的对象。</p>
+<p>通常情况下，创建和访问表的时候都不用指定模式，实际上这时访问的都是public模式。每当我们创建一个新的数据库时，PostgreSQL都会自动创建一个名为public的模式。当登录到该数据库时，如果没有特殊的指定，都是以该模式public操作各种数据对象的。</p>
+<p>我们需要使用模式有以下几个主要原因：</p>
+<ul>
+<li>允许多个用户在使用同一个数据库时彼此互不干扰。</li>
+<li>把数据库对象放在不同的模式下，然后组织成逻辑组，让它们更便于管理。</li>
+<li>第三方的应用可以放在不同的模式中，这样就不会和其他对象的名字冲突了。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建模式</span><br>create schema schema_name;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除模式</span><br>drop schema schema_name;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看模式</span><br>\dn<br></code></pre></td></tr></table></figure>
+
+<p>要访问指定模式中的对象，需要先指定一个包含模式名及表名的名字，模式和表之间用一个“点”分开，</p>
+<p>如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">schema_name.table_name<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="5-实现pg远程连接。输入密码和无密码登陆"><a href="#5-实现pg远程连接。输入密码和无密码登陆" class="headerlink" title="5 实现pg远程连接。输入密码和无密码登陆"></a>5 实现pg远程连接。输入密码和无密码登陆</h1><p>范例：实现远程连接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改用户postgres密码</span><br>[22:09:36 root@Master-DNS ~]#psql<br>psql (12.9)<br>Type &quot;help&quot; for help.<br><br>postgres=# alter user postgres with password &#x27;123456&#x27;;<br>ALTER ROLE<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看监听地址和端口，默认为127.0.0.1：5432</span><br>[22:12:56 postgres@Master-DNS ~]$ss -tnl<br>State          Recv-Q         Send-Q                 Local Address:Port                 Peer Address:Port         Process         <br>LISTEN         0              128                          0.0.0.0:22                        0.0.0.0:*                            <br>LISTEN         0              244                          0.0.0.0:5432                      0.0.0.0:*                            <br>LISTEN         0              244                        127.0.0.1:5433                      0.0.0.0:*  <br><br><br><br>[22:18:17 root@Master-DNS ~]#vim /pgsql/data/pg_hba.conf <br><span class="hljs-meta prompt_"># </span><span class="language-bash">IPv4 <span class="hljs-built_in">local</span> connections:</span><br>host    all             all             127.0.0.1/32            trust<br>host    all             all             10.0.0.0/24             md5<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启服务生效</span><br>[22:18:45 root@Master-DNS ~]#pg_ctl restart -D /pgsql/data<br>或者<br>pg_ctl restart -mf<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">测试远程登录</span><br>[22:15:57 root@rocky8 ~]#psql -h 10.0.0.3 -p 5432 postgres postgres<br></code></pre></td></tr></table></figure>
+
+<p>范例：利用.pgpass文件实现免密码连接远程posgresql</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:31:43 root@rocky8 ~]#vim .pgpass<br><span class="hljs-meta prompt_">#</span><span class="language-bash">格式：hostname:port:database:username:password</span><br>10.0.0.3:5432:postgres:postgres:123456<br><br>[22:32:48 root@rocky8 ~]#chmod 600 .pgpass <br>[22:33:07 root@rocky8 ~]#ll .pgpass <br>-rw------- 1 root root 39 Sep 16 22:32 .pgpass<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">psq1默认连接本机，需要指定和.pgpass文件内容相匹配信息才可以使用.pgpass文件连接</span><br>[22:39:29 root@rocky8 ~]#psql -h 10.0.0.3 <br>psql (12.9)<br>Type &quot;help&quot; for help.<br><br>postgres=# \l<br>                                  List of databases<br>   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   <br>-----------+----------+----------+-------------+-------------+-----------------------<br> db1       | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br> postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br> template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +<br>           |          |          |             |             | postgres=CTc/postgres<br> template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +<br>           |          |          |             |             | postgres=CTc/postgres<br>(4 rows)<br><br>postgres=# \c<br>You are now connected to database &quot;postgres&quot; as user &quot;postgres&quot;.<br><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="6-总结库，模式，表的添加和删除操作。表数据的CURD。同时总结相关信息查看语句。"><a href="#6-总结库，模式，表的添加和删除操作。表数据的CURD。同时总结相关信息查看语句。" class="headerlink" title="6 总结库，模式，表的添加和删除操作。表数据的CURD。同时总结相关信息查看语句。"></a>6 总结库，模式，表的添加和删除操作。表数据的CURD。同时总结相关信息查看语句。</h1><h2 id="6-1数据库的创建和删除"><a href="#6-1数据库的创建和删除" class="headerlink" title="6.1数据库的创建和删除"></a>6.1数据库的创建和删除</h2><p>创建数据库可以使用SQL语句create database实现，也可以利用createdb命令创建数据库</p>
+<p>createdb是一个SQL命令CREATE DATABASE的封装。</p>
+<p>createdb 命令语法格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell">createdb [option...] [dbname [description]]<br>参数说明：<br>options：参数可选项，可以是以下值：<br>-D tablespace指定数据库默认表空间。<br>-e 将createdb 生成的命令发送到服务端。<br>-E encoding指定数据库的编码。<br>-1 1ocale指定数据库的语言环境。<br>-T template指定创建此数据库的模板。<br>--help显示 createdb 命令的帮助信息。<br>-h host指定服务器的主机名。<br>-p port指定服务器监听的端口，或者 socket文件。<br>-U username连接数据库的用户名。<br>-w忽略输入密码。<br>-w连接时强制要求输入密码<br><br>dbname：要创建的数据库名。<br>description：关于新创建的数据库相关的说明。<br></code></pre></td></tr></table></figure>
+
+<p>删除数据库可以使用SQL语句drop database 实现</p>
+<p>范例：创建数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">方法1</span><br>[20:44:03 root@rocky8 ~]#createdb -h 10.0.0.3 -p 5432 -U postgres db2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法2</span><br>[20:44:36 root@Master-DNS ~]#psql<br>postgres=# create database db1;<br>CREATE DATABASE<br>postgres=# \l<br>                                  List of databases<br>   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   <br>-----------+----------+----------+-------------+-------------+-----------------------<br> db1       | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br> postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br> template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +<br>           |          |          |             |             | postgres=CTc/postgres<br> template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +<br>           |          |          |             |             | postgres=CTc/postgres<br>(4 rows)<br><br><br></code></pre></td></tr></table></figure>
+
+<p>范例：删除数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[20:44:36 root@Master-DNS ~]#psql<br>postgres=# drop database db1;<br></code></pre></td></tr></table></figure>
+
+<p>范例：查看数据库存放目录的路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell">postgres=# select oid,datname from pg_database;<br>  oid  |  datname  <br>-------+-----------<br> 12726 | postgres<br>     1 | template1<br> 12725 | template0<br> 16385 | testdb<br> 16386 | db2<br>(5 rows)<br><br>[20:49:55 root@Master-DNS ~]#ls /pgsql/data/base/<br>1  12725  12726  16385  16386<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="6-2管理和查看模式"><a href="#6-2管理和查看模式" class="headerlink" title="6.2管理和查看模式"></a>6.2管理和查看模式</h2><p>一个数据库包含一个或多个已命名的模式，模式又包含表。模式还可以包含其它对象，包括数据类型、函数、操作符等。同一个对象名可以在不同的模式里使用而不会导致冲突；比如，schema1和schema2都可以包含一个名为test的表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建模式</span><br>create schema schema_name;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除模式</span><br>drop schema schema_name;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">列出所有schema</span><br>postgres=# create table public.t1(id int);<br>postgres=# \dt<br>        List of relations<br> Schema | Name | Type  |  Owner   <br>--------+------+-------+----------<br> public | t1   | table | postgres<br>(1 row)<br><br>postgres=# create table public.t2(id int);<br>postgres=# \dn<br>  List of schemas<br>  Name  |  Owner   <br>--------+----------<br> public | postgres<br>(1 row)<br><br>postgres=# \dt<br>        List of relations<br> Schema | Name | Type  |  Owner   <br>--------+------+-------+----------<br> public | t1   | table | postgres<br> public | t2   | table | postgres<br>(2 rows)<br><br><br>postgres=# create schema xiaohexie;<br>CREATE SCHEMA<br>postgres=# create table xiaohexie.t2(id int);<br>CREATE TABLE<br>postgres=# \dt<br>        List of relations<br> Schema | Name | Type  |  Owner   <br>--------+------+-------+----------<br> public | t1   | table | postgres<br> public | t2   | table | postgres<br>(2 rows)<br><br>postgres=# \dn<br>   List of schemas<br>   Name    |  Owner   <br>-----------+----------<br> public    | postgres<br> xiaohexie | postgres<br>(2 rows)<br><br><br>postgres=# \dt xiaohexie.*;<br>          List of relations<br>  Schema   | Name | Type  |  Owner   <br>-----------+------+-------+----------<br> xiaohexie | t2   | table | postgres<br>(1 row)<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-3查看和连接数据库"><a href="#6-3查看和连接数据库" class="headerlink" title="6.3查看和连接数据库"></a>6.3查看和连接数据库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">列出所有数据库名，相当于MySQL中的show databases;</span><br>postgres=# \l<br>                                  List of databases<br>   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   <br>-----------+----------+----------+-------------+-------------+-----------------------<br> db2       | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br> postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br> template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +<br>           |          |          |             |             | postgres=CTc/postgres<br> template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +<br>           |          |          |             |             | postgres=CTc/postgres<br> testdb    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | <br>(5 rows)<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">显示数据库详细信息，比如大小</span><br>postgres=# \l+<br>                                                                    List of databases<br>   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   |  Size   | Tablespace |                Descr<br>iption                 <br>-----------+----------+----------+-------------+-------------+-----------------------+---------+------------+---------------------<br>-----------------------<br> db2       | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 7513 kB | pg_default | <br> postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 7665 kB | pg_default | default administrati<br>ve connection database<br> template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +| 7513 kB | pg_default | unmodifiable empty d<br>atabase<br>           |          |          |             |             | postgres=CTc/postgres |         |            | <br> template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +| 7513 kB | pg_default | default template for<br> new databases<br>           |          |          |             |             | postgres=CTc/postgres |         |            | <br> testdb    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 7513 kB | pg_default | <br>(5 rows)<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看当前连接信息</span><br>postgres=# \c<br>You are now connected to database &quot;postgres&quot; as user &quot;postgres&quot;.<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看当前来南京详细信息</span><br>postgres=# \conninfo <br>You are connected to database &quot;postgres&quot; as user &quot;postgres&quot; via socket in &quot;/tmp&quot; at port &quot;5432&quot;.<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">连接数据库，相当于use</span><br><br><br>postgres=# \c db2<br>You are now connected to database &quot;db2&quot; as user &quot;postgres&quot;.<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="6-4管理表"><a href="#6-4管理表" class="headerlink" title="6.4管理表"></a>6.4管理表</h2><p>PostgreSQL支持多种数据类型实现表结构的创建</p>
+<p>范例：查看支持数据类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell">db2=# select typname from pg_type;<br>                typname                <br>---------------------------------------<br> bool<br> bytea<br> char<br> name<br> int8<br> int2<br> int2vector<br> int4<br> regproc<br> text<br> oid<br> tid<br> xid<br> cid<br> oidvector<br> pg_type<br> pg_attribute<br> pg_proc<br>............<br></code></pre></td></tr></table></figure>
+
+<p>范例：管理表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs shell">testdb=# \c testdb <br>You are now connected to database &quot;testdb&quot; as user &quot;postgres&quot;.<br>testdb=# \d<br>Did not find any relations.<br>testdb=# create table tb1 (id serial primary key,name text );<br>CREATE TABLE<br>testdb=# \d<br>             List of relations<br> Schema |    Name    |   Type   |  Owner   <br>--------+------------+----------+----------<br> public | tb1        | table    | postgres<br> public | tb1_id_seq | sequence | postgres<br>(2 rows)<br><br><br>testdb=# insert into tb1 (name) select (md5(random()::text)) from generate_series(2,10);<br>INSERT 0 9<br>testdb=# select * from tb1; <br> id |               name               <br>----+----------------------------------<br>  1 | 132e3fcc509eac22115b11f105289c94<br>  2 | a49fef866f321e05a8de6711115b58c5<br>  3 | 92b46b11da21239a005d0a8a566b50fd<br>  4 | c471f760e94e2bf8774fbe63b4125fb2<br>  5 | be6dab02ab4dadf31ee9b6cfdf5018a2<br>  6 | ede4d47ca3326f8ef76d7eacb25bae44<br>  7 | 1a3cad7de238e4668201aa2d1a98bde5<br>  8 | 990a9c4e924be586da2e2b6886aa62ed<br>  9 | 6cfa64ea77ece1c0318eb8873d0914a9<br>(9 rows)<br><br><br><br><br>testdb=# insert  into  tb1 (name) values(&#x27;bb&#x27;) ;<br>INSERT 0 1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#PostgreSQL中插入100万条记录只需要花3s</span></span><br>testdb=# \timing on <br>Timing is on.<br>testdb=# insert into tb1 (name) select (md5(random()::text)) from generate_series (1,1000000);<br>INSERT 0 1000000<br>Time: 3184.463 ms (00:03.184)<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">复制表结构，不复制数据</span><br>testdb=# create table tb2 (like tb1);<br>CREATE TABLE<br>Time: 7.417 ms<br>testdb=# \d tb2<br>                Table &quot;public.tb2&quot;<br> Column |  Type   | Collation | Nullable | Default <br>--------+---------+-----------+----------+---------<br> id     | integer |           | not null | <br> name   | text    |           |          | <br><br>testdb=# select * from tb2;<br> id | name <br>----+------<br>(0 rows)<br><br>Time: 0.494 ms<br>testdb=# drop table tb2;<br>DROP TABLE<br>testdb=# \d <br>             List of relations<br> Schema |    Name    |   Type   |  Owner   <br>--------+------------+----------+----------<br> public | tb1        | table    | postgres<br> public | tb1_id_seq | sequence | postgres<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="6-5表的CRUD"><a href="#6-5表的CRUD" class="headerlink" title="6.5表的CRUD"></a>6.5表的CRUD</h2><p>SQL的CRUD,即Insert,update,delete,select 四条语句范例:：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs shell">testdb=# create table tb2 (id serial ,name varchar(10));<br>CREATE TABLE<br>Time: 1.782 ms<br>testdb=# \d tb2;<br>                                   Table &quot;public.tb2&quot;<br> Column |         Type          | Collation | Nullable |             Default             <br>--------+-----------------------+-----------+----------+---------------------------------<br> id     | integer               |           | not null | nextval(&#x27;tb2_id_seq&#x27;::regclass)<br> name   | character varying(10) |           |          | <br><br>testdb=# insert into tb2 (name) values(&#x27;a&#x27;);<br>INSERT 0 1<br>Time: 0.863 ms<br>testdb=# insert into tb2 (name) values(&#x27;b&#x27;);<br>INSERT 0 1<br>Time: 0.939 ms<br><br><br>testdb=#select *from tb2;<br> id | name <br>----+------<br>  1 | a<br>  2 | b<br>(2 rows)<br><br>Time: 0.753 ms<br><br>testdb=# update tb2 set name=&#x27;c&#x27; where id=&#x27;2&#x27;;<br>UPDATE 1<br>Time: 1.908 ms<br>testdb=# select *from tb2;<br> id | name <br>----+------<br>  1 | a<br>  2 | c<br>(2 rows)<br><br>Time: 0.696 ms<br><br>testdb=# delete from tb2 where id=1;<br>DELETE 1<br>Time: 1.343 ms<br>testdb=# select *from tb2;<br> id | name <br>----+------<br>  2 | c<br>(1 row)<br><br>Time: 0.369 ms<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">清空表</span><br>testdb=# truncate tb1;<br>TRUNCATE TABLE<br>Time: 17.382 ms<br>testdb=# select *from tb1;<br> id | name <br>----+------<br>(0 rows)<br><br>Time: 0.492 ms<br></code></pre></td></tr></table></figure>
+
+<p>范例：查看表的列信息及大小</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">testdb=# \d tb2;<br>                                   Table &quot;public.tb2&quot;<br> Column |         Type          | Collation | Nullable |             Default             <br>--------+-----------------------+-----------+----------+---------------------------------<br> id     | integer               |           | not null | nextval(&#x27;tb2_id_seq&#x27;::regclass)<br> name   | character varying(10) |           |          | <br><br>testdb=# select pg_column_size(name),name from tb2;<br> pg_column_size | name <br>----------------+------<br>              2 | c<br>(1 row)<br><br>Time: 0.657 ms<br><br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">testdb=# select generate_series(3,6);<br> generate_series <br>-----------------<br>               3<br>               4<br>               5<br>               6<br>(4 rows)<br><br>Time: 0.396 ms<br><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="7-总结pg的用户和角色管理。"><a href="#7-总结pg的用户和角色管理。" class="headerlink" title="7 总结pg的用户和角色管理。"></a>7 总结pg的用户和角色管理。</h1><p>在PostgreSQL中，用户与角色是没有区别的。</p>
+<p>用户和角色可以用来实现以下功能：</p>
+<ul>
+<li>用来登录数据库实例、</li>
+<li>管理数据库对象</li>
+</ul>
+<p>创建用户与角色的语法如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell">CREATE USER name [[WITH] option [ ...]]<br>CREATE ROLE name [[WITH] option [ ...]]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">上面两个命令都可以创建用户，不同的是CREATE USER创建的用户默认可以登录，而CREATE ROLE不可以登录</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">除了CREATE USER默认创建出来的用户有LOGIN的权限，而CREATE ROLE 创建出来的用户没有“LOGIN”的权限之外，CREATE RULE 与 CREATE USER没有其他任何的区别。</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">上面语法中的“option”可以是如下内容。</span><br>SUPERUSER|NOSUPERUSER：表示创建出来的用户是否为超级用户。只有超级用户才能创建超级用户。<br>CREATEDB /NOCREATEDB：指定创建出来的用户是否有执行“CREATE DATABASE&#x27;的权限。<br>CREATEROLE NOCREATEROLE：指定创建出来的用户是否有创建其他角色的权限。<br>CREATEUSER NOCREATEUSER：指定创建出来的用户是否有创建其他用户的权限。<br>INHERIT |NOINHERIT：如果创建的一个用户拥有某一个或某几个角色，这时若指定INHERIT，则表示用户自动拥有相应角色的权限，否则这个用户没有该角色的权限。<br>LOGIN|NOLOGIN：指定创建出来的用户是否有“LOGIN”的权限，可以临时地禁止一个用户的“LOGIN”权限，这时此用户就不能连接到数据库<br>CONNECTION LIMIT connlimit：指定该用户可以使用的并发连接数量。默认值是-1，表示没有限制。<br>[ENCRYPTED | UNENCRYPTED ] PASSWORD&#x27;paSSWord&#x27;：用于控制存储在系统表里面的口令是否加密。<br>VALID UNTIL&#x27;timestamp&#x27;：密码失效时间，如果不指定这个子句，那么口令将永远有效。<br>INROLE role name [，...]：指定用户成为哪些角色的成员，请注意没有任何选项可以把新角色添加为管理员，必须使用独立的GRANT命令来做这件事情。<br>IN GROUP role_name [,...]:与IN ROLE相同,是已过时的语法。<br>ROLE role_name [,...]:role_name将成为这个新建的角色的成员。<br>ADMIN role_name[,...]:role_name将有这个新建角色的WITH ADMIN OPTION权限。<br>USER role_name[,…]:与ROLE子句相同,但已过时。<br>SYSID uid：此子句主要是为了SQL向下兼容，实际没有什么用处。<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-2用户管理案例"><a href="#7-2用户管理案例" class="headerlink" title="7.2用户管理案例"></a>7.2用户管理案例</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看帮助</span><br>\h create user<br>\h alter user<br>\h drop user<br>\h create role<br>\h alter role<br>\h drop role<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">以下两个命令用法相似</span><br>create user	#创建的用户默认可以连接<br>create role	#创建的用户默认无法连接<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改用户</span><br>alter user<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除用户</span><br>drop user<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">显出所有用户和角色</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">\<span class="hljs-built_in">du</span>和\dg命令等价。原因是在PostgreSQL数据库中用户和角色不分的。</span><br>\du<br>\dg<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建可以登录的用户和密码</span><br>create user wang with password &#x27;123456&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建不可登录用户</span><br>create role zhao with password &#x27;123456&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建可以连接的用户</span><br>create role li with login password &#x27;123456&#x27; valid until &#x27;2025-12-31&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建管理员</span><br>create role admin with superuser login password &#x27;123456&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建复制用户</span><br>create role repl replication login  encrypted password &#x27;123456&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改密码</span><br>alter user admin with password &#x27;12345678&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改权限和密码</span><br>alter user wang with nologin password &#x27;123&#x27;;<br>alter user zhao with login ;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除用户</span><br>drop user zhao ;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看用户信息</span><br>\du<br><br>                                   List of roles<br> Role name |                         Attributes                         | Member of <br>-----------+------------------------------------------------------------+-----------<br> admin     | Superuser                                                  | &#123;&#125;<br> li        | Password valid until 2025-12-31 00:00:00+08                | &#123;&#125;<br> postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | &#123;&#125;<br> repl      | Replication                                                | &#123;&#125;<br> wang      | Cannot login                                               | &#123;&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看指定用户信息</span><br>\du wang<br><br>            List of roles<br> Role name |  Attributes  | Member of <br>-----------+--------------+-----------<br> wang      | Cannot login | &#123;&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>范例：修改 postgres用户密码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用postgres用户登录（PostgresSQL安装后会自动创建postgres用户）</span><br>[root@rocky8 ~]#su -postgres<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">登录postgresq1数据库</span><br>[root@rocky8 ~]# psql -U postgres<br><span class="hljs-meta prompt_">#</span><span class="language-bash">安全起见，修改数据库管理员postgres用户的密码</span><br>postgres=# ALTER USER postgres WITH ENCRYPTED PASSWORD &#x27;123456&#x27;;<br>ALTER ROLE<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-3权限管理"><a href="#7-3权限管理" class="headerlink" title="7.3权限管理"></a>7.3权限管理</h2><p>在PostgreSQL数据库中，每个数据库的对象（包括数据库）都有一个所有者，也就是说任何数据库对象都是属于某个用户的，所有者默认就拥有所有权限。所以不需要把对象的权限再赋给所有者。自己创建的数据库对象，自己当然有全部的权限。当然，所有者出于安全考虑也可以选择废弃一些自己的权限。在PostsgreSQL数据库中，删除一个对象及任意修改它的权利是所有者固有的，不能被赋予或撤销。所有者也隐含地拥有把操作该对象的权限赋给别人的权利。</p>
+<p>一个用户的权限分为两类，一类是在创建用户时就指定的权限，这些权限如下：</p>
+<ul>
+<li>超级用户的权限</li>
+<li>创建数据库的权限</li>
+<li>是否允许LOGIN的权限</li>
+</ul>
+<p>以上这些权限是创建用户时指定的，后续可使用ALTER ROLE命令来修改。</p>
+<p>还有一类权限，是由命令GRANT和REVOKE来管理的，这些权限如下：</p>
+<ul>
+<li>在数据库中创建模式（SCHEMA)</li>
+<li>允许在指定的数据库中创建临时表连接某个数据库</li>
+<li>在模式中创建数据库对象，如创建表、视图函数等</li>
+<li>在一些表中做SELECT、UPDATE、INSERRDELETE等操作等</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">GRANT命令有两个作用</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">1.让某个用户成为某个角色的成员，从而使其拥有角色的权限：</span><br>GRANT role_name [, ...] T0 role_name [, ...] [ WITH ADMIN OPTION ];<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2.把某些数据库逻辑结构对象的操作权限赋予某个用户(或角色)，命令的格式如下：</span><br>GRANT some privileqes ON database_object_type object_name TO role_name;<br>其中,“some _privileges”表示在这个数据库对象中的权限,“database_object_type”是数据库对象的类型，如“TABLE”、“SEQUENCE”、“SCHEMA”，等。<br></code></pre></td></tr></table></figure>
+
+<p><strong>PostgresQL中的权限是按以下几个层次进行管理的：</strong></p>
+<ul>
+<li>cluster权限：实例权限通过pg_hba.conf配置</li>
+<li>管理赋在用户特殊属性上的权限，如超级用户的权限、创建数据库的权限、创建用户的权限、Login权限等</li>
+<li>在数据库中创建模式的权限</li>
+<li>表空间权限：通过grant/revoke控制权限操作表，物化视图，索引等</li>
+<li>在模式中创建数据库对象的权限，如创建表、创建索引，等等</li>
+<li>查询表、往表中插入数据、更新表、删除表中数据的权限</li>
+<li>操作表中某些字段的权限</li>
+</ul>
+<h2 id="7-4权限案例"><a href="#7-4权限案例" class="headerlink" title="7.4权限案例"></a>7.4权限案例</h2><p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">授权创建新数据库</span><br>postgres=# alter user wang with createdb;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">database权限设置</span><br>grant create on DATABASE testdb to wang ;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">schema权限</span><br>alter schema wang owner to wang ;<br>grant SELECT,insert,update,delete on all tables in schema wang to wang ;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建<span class="hljs-built_in">test</span>的schema指定所有者为joe</span><br>create schema if not exists test authorization joe;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">object权限</span><br>GRANT select,insert,update,delete ON testdb.t1 TO wang;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建数据库并指定所有者的用户</span><br>create user wang with password &#x27;123456&#x27;;<br>create database zabbix owner wang ;<br></code></pre></td></tr></table></figure>
+
+<p>范例：创建业务用户和授权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell">postgres=# create database pinxixi;<br>postgres=#\c pinxixi<br>pinxixi=#create user wanrentuan with password &#x27;123456&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法1</span><br>pinxixi=#create schema wanrentuan;<br>pinxixi=#ALTER SCHEMA wanrentuan OWNER to wanrentuan;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法2</span><br>pinxixi=#CREATE SCHEMA AUTHORIZATION wanrentuan;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法3</span><br>pinxixi=#GRANT select, insert,update,delete oN ALL TABLES IN SCHEMA wanrentuanto wanrentuan;<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将创建一个名为“<span class="hljs-built_in">readonly</span>”的用户</span><br>CREATE USER readonly with password &#x27;123456&#x27;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">把在public的schema下现有的所有表的SELECT 权限赋给用户<span class="hljs-built_in">readonly</span></span><br>GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="8-添加mage用户，magedu模式，准备zabbix库，配置mage用户的默认模式magedu，要求mage用户给zabbix库有所有权限。"><a href="#8-添加mage用户，magedu模式，准备zabbix库，配置mage用户的默认模式magedu，要求mage用户给zabbix库有所有权限。" class="headerlink" title="8 添加mage用户，magedu模式，准备zabbix库，配置mage用户的默认模式magedu，要求mage用户给zabbix库有所有权限。"></a>8 添加mage用户，magedu模式，准备zabbix库，配置mage用户的默认模式magedu，要求mage用户给zabbix库有所有权限。</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">postgres=# create user mage with password &#x27;123456&#x27;;<br>CREATE ROLE<br>postgres=# create database zabbix;<br>CREATE DATABASE<br>postgres=# create schema magedu;<br>CREATE SCHEMA<br><br>postgres=# alter database zabbix owner to mage;<br>ALTER DATABASE<br>postgres=# alter schema magedu owner to mage;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="9-总结pgsql的进程结构，说明进程间如何协同工作的。"><a href="#9-总结pgsql的进程结构，说明进程间如何协同工作的。" class="headerlink" title="9 总结pgsql的进程结构，说明进程间如何协同工作的。"></a>9 总结pgsql的进程结构，说明进程间如何协同工作的。</h1><p><img src="image-20231003233044764.png" srcset="/img/loading.gif" lazyload alt="image-20231003233044764"></p>
+<h3 id="9-1进程"><a href="#9-1进程" class="headerlink" title="9.1进程"></a>9.1进程</h3><ul>
+<li><p>Postmaster主进程</p>
+<ul>
+<li><p>它是整个数据库实例的主控制进程，负责启动和关闭该数据库实例。</p>
+</li>
+<li><p>实际上，使用pg ctl来启动数据库时，pg_ctl也是通过运行postgres来启动数据库的，只是它做了一些包装，更容易启动数据库。</p>
+</li>
+<li><p>它是第一个PostgresQL进程，此主进程还会fork出其他子进程，并管理它们。</p>
+</li>
+<li><p>当用户和PostgreSQL建立连接时，首先是和Postmaster进程建立连接。首先，客户端会发出身份验证的信息给Postmaster进程，Postmaster进程根据消息中的信息进行身份验证判断，如果验证通过，它会fork出一个会话子进程为这个连接服务。</p>
+</li>
+<li><p>当某个服务进程出现错误的时候，Postmaster主进程会自动完成系统的恢复。恢复过程中会停掉所有的服务进程，然后进行数据库数据的一致性恢复，等恢复完成后，数据库又可以接受新的连接。</p>
+</li>
+<li><p>验证功能是通过配置文件pg_hba.conf和用户验证模块来提供。</p>
+</li>
+<li><p>postmaster程序是指向postgres的软链接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:39:20 root@Master-DNS ~]#ll /aaps/pgsql/bin/postmaster <br>lrwxrwxrwx 1 root root 8 Sep 16 16:51 /aaps/pgsql/bin/postmaster -&gt; postgres<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>BgWriter 后台写进程</p>
+<ul>
+<li>为了提高插入、删除和更新数据的性能，当往数据库中插入或者更新数据时，并不会马上把数据持久化到数据文件中，而是先写入Buffer中</li>
+<li>该辅助进程可以周期性的把内存中的脏数据刷新到磁盘中</li>
+</ul>
+</li>
+<li><p>WalWriter 预写式日志进程</p>
+<ul>
+<li>WAL是write ahead log的缩写,WAL log旧版中称为xlog,相当于MySQL中Redo log</li>
+<li>预写式日志是在修改数据之前，必须把这些修改操作记录到磁盘中，这样后面更新实际数据时，就不需要实时的把数据持久化到文件中了。即使机器突然宕机或者数据库异常退出，导致一部分内存中的脏数据没有及时的刷新到文件中，在数据库重启后，通过读取WAL日志，并把最后一部分WAL日志重新执行一遍，就能恢复到宕机时的状态了</li>
+<li>WAL日志保存在pg_wal目录（早期版本为pg_xlog)下。每个xlog文件默认是16MB,为了满足恢复要求，在pg_wal目录下会产生多个WAL日志，这样就可保证在宕机后，未持久化的数据都可以通过WAL日志来恢复，那些不需要的WAL日志将会被自动覆盖</li>
+</ul>
+</li>
+<li><p>Checkpointer 检查点进程</p>
+<ul>
+<li>检查点（Checkpoints)是事务序列中的点，保证在该点之前的所有日志信息都更新到数据文件中。</li>
+<li>在检查点时，所有脏数据页都冲刷到磁盘并且向日志文件中写入一条特殊的检查点记录。在发生崩溃的时候，恢复器就知道应该从日志中的哪个点（称做redo记录）开始做REDO操作，因为在该记录前的对数据文件的任何修改都已经在磁盘上了。在完成检查点处理之后，任何在redo记录之前写的日志段都不再需要，因此可以循环使用或者删除。在进行WAL归档的时候，这些日志在循环利用或者删除之前应该必须先归档保存</li>
+<li>检查点进程（CKPT)在特定时间自动执行一个检查点,通过向数据库写入进程(BgWriter)传递消息来启动检查点请求</li>
+</ul>
+</li>
+<li><p>AutoVacuum 自动清理进程</p>
+<ul>
+<li>执行delete操作时，旧的数据并不会立即被删除，在更新数据时，也不会在旧的数据上做更新，而是新生成一行数据。旧的数据只是被标识为删除状态，在没有并发的其他事务读到这些旧数据时，它们才会被清除掉</li>
+<li>autovacuum lanucher负责回收垃圾数据的master进程，如果开启了autovacuum的话，那么postmaster会fork这个进程</li>
+<li>autovacuum worker负责回收垃圾数据的worker进程,是lanucher进程fork出来的</li>
+</ul>
+</li>
+<li><p>PgStat统计数据收集进程</p>
+<ul>
+<li>此进程主要做数据的统计收集工作</li>
+<li>收集的信息主要用于查询优化时的代价估算。统计的数据包括对一个表或索引进行的插入、删除、更新操作，磁盘块读写的次数以及行的读次数等。</li>
+<li>系统表pg_statistic中存储了PgStat收集的各类统计信息</li>
+</ul>
+</li>
+<li><p>PgArch归档进程</p>
+<ul>
+<li>默认没有此进程，开启归档功能后才会启动archiver进程</li>
+<li>WAL日志文件会被循环使用，也就是说WAL日志会被覆盖，利用PgArch进程会在覆盖前把WAL日志备份出来，类似于binlog,可用于备份功能</li>
+<li>PostgreSQL从8.X版本开始提供了PITR(Point-In-Time-Recovery)技术,即就是在对数据厍进行过一次全量备份后，该技术将备份时间点后面的WAL日志通过归档进行备份，将来可以使用数据库的全量备份再加上后面产生的WAL日志，即可把数据库向前恢复到全量备份后的任意一个时间点的状态</li>
+</ul>
+</li>
+<li><p>SysLogger 系统日志进程</p>
+<ul>
+<li>默认没有此进程，配置文件postgresql.conf 设置参数logging_collect设置为“on”时，主进程才会启动SysLogger辅助进程</li>
+<li>它从Postmaster主进程、所有的服务进程以及其他辅助进程收集所有的stderr输出，并将这些输出写入到日志文件中</li>
+</ul>
+</li>
+<li><p>startup启动进程</p>
+<ul>
+<li>用于数据库恢复的进程</li>
+</ul>
+</li>
+<li><p>Session 会话进程</p>
+<ul>
+<li>每一个用户发起连接后，一旦验证成功，postmaster进程就会fork一个新的子进程负责连接此用户。</li>
+<li>通常表现为进程形式：postgres postgres [local] idle</li>
+</ul>
+</li>
+</ul>
+<p>案例：查看进程</p>
+<p><img src="image-20230928224114461.png" srcset="/img/loading.gif" lazyload alt="image-20230928224114461"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">[21:44:27 root@Master-DNS ~]#ps auxf|grep ^postgres<br>postgres     843  0.0  0.6 172536 17092 ?        Ss   21:43   0:00 /aaps/pgsql/bin/postmaster -D /pgsql/data/<br>postgres     910  0.0  0.1 172652  5628 ?        Ss   21:43   0:00  \_ postgres: checkpointer   <br>postgres     911  0.0  0.1 172536  4992 ?        Ss   21:43   0:00  \_ postgres: background writer   <br>postgres     912  0.0  0.2 172536  7628 ?        Ss   21:43   0:00  \_ postgres: walwriter   <br>postgres     913  0.0  0.2 173208  6192 ?        Ss   21:43   0:00  \_ postgres: autovacuum launcher   <br>postgres     914  0.0  0.1  27220  3240 ?        Ss   21:43   0:00  \_ postgres: stats collector   <br>postgres     915  0.0  0.1 172960  4968 ?        Ss   21:43   0:00  \_ postgres: logical replication launcher   <br></code></pre></td></tr></table></figure>
+
+<p>范例：开启归档后再查看进程</p>
+<p><img src="image-20230928225410387.png" srcset="/img/loading.gif" lazyload alt="image-20230928225410387"></p>
+<h1 id="10-总结pgsql的数据目录中结构，说明每个文件的作用，并可以配上一些示例说明文件的作用。"><a href="#10-总结pgsql的数据目录中结构，说明每个文件的作用，并可以配上一些示例说明文件的作用。" class="headerlink" title="10 总结pgsql的数据目录中结构，说明每个文件的作用，并可以配上一些示例说明文件的作用。"></a>10 总结pgsql的数据目录中结构，说明每个文件的作用，并可以配上一些示例说明文件的作用。</h1><h3 id="数据库目录介绍"><a href="#数据库目录介绍" class="headerlink" title="数据库目录介绍"></a>数据库目录介绍</h3><p><img src="image-20230928230020677.png" srcset="/img/loading.gif" lazyload alt="image-20230928230020677"></p>
+<p>数据库数据存放在环境变量PGDATA指向数据目录。这个目录是在安装时指定的，所以在安装时需要指定一个合适的目录作为数据目录的根目录，而且，每一个数据库实例都要有一个对应的目录。目录的初始化是使用initdb来完成的。</p>
+<p>初始化完成后，PGDATA数据目录下就会生成三个配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">postgresql.conf#数据库实例的主配置文件，基本上所有的配置参数都在此文件中。<br>pg_hba.conf#认证配置文件，配置了允许哪些IP的主机访问数据库，认证的方法是什么等信息。<br>pg_ident.conf #认证方式ident的用户映射文件。<br></code></pre></td></tr></table></figure>
+
+<p>此外在PGDATA目录下还会生成如下一些子目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell">base #默认表空间的目录，每个数据库都对应一个base目录下的子目录，每个表和索引对应一个独立文件<br>global #这个目录对应pg_globa1表空间，存放实例中的共享对象<br><span class="hljs-meta prompt_">pg_clog#</span><span class="language-bash">存储事务提交状态数据</span><br>pg_bba.conf #数据库访问控制文件<br><span class="hljs-meta prompt_">pg_1og#</span><span class="language-bash">数据库系统日志目录，在查询一些系统错误时就可查看此目录下日志文件。(根据配置定义，可能没有这个目录）</span><br>pg_xact #提交日志commit log的目录,pg 9之前叫<br><span class="hljs-meta prompt_">pg_clogpg_multixact#</span><span class="language-bash">共享行锁的事务状态数据</span><br>pg_notify #异步消息相关的状态数据pg_serial #串行隔离级别的事务状态数据<br>pg_snapshots #存储执行了事务snapshot导出的状态数据<br>pg_stat_tmp #统计信息的临时文件<br>pg_subtrans #子事务状态数据<br><span class="hljs-meta prompt_">pg_stat#</span><span class="language-bash">统计信息的存储目录。关闭服务时,将pg_stat_tmp目录中的内容移动至此目录实现保存</span><br>pg_stat_tmp #统计信息的临时存储目录。开启数据库时存放统计信息<br><span class="hljs-meta prompt_">pg_tblsp#</span><span class="language-bash">存储了指向各个用户自建表空间实际目录的链接文件</span><br><span class="hljs-meta prompt_">pg_twophase#</span><span class="language-bash">使用两阶段提交功能时分布式事务的存储目录</span><br>pg_wal #WAL日志的目录，早期版一本目录为<br>pg_xlogPG_VERSION #数据库版本<br>postmaster.opts #记录数据库启动时的命令行选项<br>postmaster.pid#数据库启动的主进程信息文件，包括PID，SPGDATA目录，数据库启动时间，监听端口，socket文件路径，临听地址，共享内存的地址信息(ipsc可查看），主进程状态<br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell">[22:43:39 root@Master-DNS ~]#ll $PGDATA<br>total 64<br>drwx------ 11 postgres postgres   123 Sep 27 17:48 base<br>drwx------  2 postgres postgres  4096 Sep 28 22:05 global<br>drwx------  2 postgres postgres     6 Sep 16 16:51 pg_commit_ts<br>drwx------  2 postgres postgres     6 Sep 16 16:51 pg_dynshmem<br>-rw-------  1 postgres postgres  4795 Sep 16 22:12 pg_hba.conf<br>-rw-------  1 postgres postgres  1636 Sep 16 16:51 pg_ident.conf<br>drwx------  4 postgres postgres    68 Sep 28 21:48 pg_logical<br>drwx------  4 postgres postgres    36 Sep 16 16:51 pg_multixact<br>drwx------  2 postgres postgres    18 Sep 28 21:43 pg_notify<br>drwx------  2 postgres postgres     6 Sep 16 16:51 pg_replslot<br>drwx------  2 postgres postgres     6 Sep 16 16:51 pg_serial<br>drwx------  2 postgres postgres     6 Sep 16 16:51 pg_snapshots<br>drwx------  2 postgres postgres     6 Sep 28 21:43 pg_stat<br>drwx------  2 postgres postgres   168 Sep 28 23:03 pg_stat_tmp<br>drwx------  2 postgres postgres    18 Sep 16 16:51 pg_subtrans<br>drwx------  2 postgres postgres    32 Sep 18 23:00 pg_tblspc<br>drwx------  2 postgres postgres     6 Sep 16 16:51 pg_twophase<br>-rw-------  1 postgres postgres     3 Sep 16 16:51 PG_VERSION<br>drwx------  3 postgres postgres  4096 Sep 18 22:46 pg_wal<br>drwx------  2 postgres postgres    18 Sep 16 16:51 pg_xact<br>-rw-------  1 postgres postgres    88 Sep 16 16:51 postgresql.auto.conf<br>-rw-------  1 postgres postgres 26808 Sep 16 21:25 postgresql.conf<br>-rw-------  1 postgres postgres    45 Sep 28 21:43 postmaster.opts<br>-rw-------  1 postgres postgres    68 Sep 28 21:43 postmaster.pid<br><br></code></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs shell">[23:03:24 root@Master-DNS ~]#ls /pgsql/data<br>base          pg_hba.conf    pg_notify     pg_stat      pg_twophase  postgresql.auto.conf<br>global        pg_ident.conf  pg_replslot   pg_stat_tmp  PG_VERSION   postgresql.conf<br>pg_commit_ts  pg_logical     pg_serial     pg_subtrans  pg_wal       postmaster.opts<br>pg_dynshmem   pg_multixact   pg_snapshots  pg_tblspc    pg_xact      postmaster.pid<br>[23:04:00 root@Master-DNS ~]#cat /pgsql/data/PG_VERSION <br>12<br>[23:04:17 root@Master-DNS ~]#cat /pgsql/data/postgresql.auto.conf <br><span class="hljs-meta prompt_"># </span><span class="language-bash">Do not edit this file manually!</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">It will be overwritten by the ALTER SYSTEM <span class="hljs-built_in">command</span>.</span><br><br><br>[23:04:33 root@Master-DNS ~]#cat /pgsql/data/postmaster.opts <br>/aaps/pgsql/bin/postgres &quot;-D&quot; &quot;/pgsql/data/&quot;<br>[23:05:05 root@Master-DNS ~]#cat /pgsql/data/postmaster.pid <br>843<br>/pgsql/data<br>1695908629<br>5432<br>/tmp<br>*<br>  5432001         0<br>ready   <br>[23:05:12 root@Master-DNS ~]#find /tmp/ -type s -ls<br>   741700      0 srwxrwxrwx   1  postgres postgres        0 Sep 28 22:41 /tmp/.s.PGSQL.5432<br><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="11-尝试将pgsql新版本的运行日志存储到数据库。"><a href="#11-尝试将pgsql新版本的运行日志存储到数据库。" class="headerlink" title="11 尝试将pgsql新版本的运行日志存储到数据库。"></a>11 尝试将pgsql新版本的运行日志存储到数据库。</h1><h5 id="将csv格式运行日志存储至数据库"><a href="#将csv格式运行日志存储至数据库" class="headerlink" title="将csv格式运行日志存储至数据库"></a><strong>将csv格式运行日志存储至数据库</strong></h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs shell">[23:56:39 root@Master-DNS ~]#vim /pgsql/data/postgresql.conf<br>log_destination = &#x27;csvlog&#x27; <br>logging_collector = on<br><br>[00:05:38 root@Master-DNS ~]#systemctl restart postgresql<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">先创建对应的表结构，只适用于PG12</span><br>testdb=#CREATE TABLE pg_log(<br>log_time timestamp(3) with time zone,<br>user_name text,<br>database_name text,<br>process_id integer,<br>connection_from text,<br>session_id text,<br>session_line_num bigint,<br>command_tag text,<br>session_start_time timestamp with time zone,<br>virtual_transaction_id text,<br>transaction_id bigint,<br>error_severity text,<br>sql_state_code text,<br>message text,<br>detail text,<br>hint text,<br>interna7_query text,<br>interna7_query_pos integer,<br>context text,<br>query text,<br>query_pos integer,<br>location text,<br>application_name text,<br>PRIMARY KEY (session_id,session_line_num)<br>);<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将csv文件中的日志导入到表中</span><br>testdb=# copy pg_log from &#x27;/pgsql/data/log/postgresql-2023-09-29_000620.csv&#x27; with csv;<br>COPY 4<br></code></pre></td></tr></table></figure>
+
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/04/PostgreSQL-%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PostgreSQL 数据库</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/03/%E7%AC%AC6%E5%91%A8%E4%BD%9C%E4%B8%9A/">
+                        <span class="hidden-mobile">第6周作业</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

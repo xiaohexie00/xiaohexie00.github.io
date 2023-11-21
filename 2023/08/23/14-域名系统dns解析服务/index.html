@@ -1,0 +1,800 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="域名系统DNS服务 1.名字解析介绍和DNS当前TCP&#x2F;IP网络中的设备之间进行通信，是利用和依赖于IP地址实现的，但IP地址是很难记忆的。当网络设备众多，想要记住每个设备对应的IP，可以说是“不可能完成的任务”。那么如何解决这个问题？我们可以给每个网络设备起一个友好的名称，如：www.baidu.com，这种由文字组成的名称，显而易见要更容易记忆。但是计算机不认识这种名称，我们可以利用一种名字解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="14.域名系统dns解析服务">
+<meta property="og:url" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="5-12 23:30">
+<meta property="og:description" content="域名系统DNS服务 1.名字解析介绍和DNS当前TCP&#x2F;IP网络中的设备之间进行通信，是利用和依赖于IP地址实现的，但IP地址是很难记忆的。当网络设备众多，想要记住每个设备对应的IP，可以说是“不可能完成的任务”。那么如何解决这个问题？我们可以给每个网络设备起一个友好的名称，如：www.baidu.com，这种由文字组成的名称，显而易见要更容易记忆。但是计算机不认识这种名称，我们可以利用一种名字解">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230810202706342-1692783730239.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230810203252024-1692783730239.png">
+<meta property="og:image" content="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2984663361/p336439.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230817200609641-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230817201224924-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212031094-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212147468-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212613119-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212632902-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212654248-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212725002-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212824986-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818212836745-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230823160658348.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230822010407262-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230822010450054-1692783730240.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230823171703595.png">
+<meta property="og:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230818215004688-1692783730240.png">
+<meta property="article:published_time" content="2023-08-23T12:54:04.000Z">
+<meta property="article:modified_time" content="2023-11-21T13:07:39.211Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/08/23/14-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1/image-20230810202706342-1692783730239.png">
+  
+  
+  <title>14.域名系统dns解析服务 - 5-12 23:30</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="14.域名系统dns解析服务">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-23 12:54" pubdate>
+        August 23, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      21k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      179 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">14.域名系统dns解析服务</h1>
+            
+            <div class="markdown-body">
+              <p><strong>域名系统DNS服务</strong></p>
+<h1 id="1-名字解析介绍和DNS"><a href="#1-名字解析介绍和DNS" class="headerlink" title="1.名字解析介绍和DNS"></a>1.名字解析介绍和DNS</h1><p>当前TCP/IP网络中的设备之间进行通信，是利用和依赖于IP地址实现的，但IP地址是很难记忆的。当网络设备众多，想要记住每个设备对应的IP，可以说是“不可能完成的任务”。那么如何解决这个问题？我们可以给每个网络设备起一个友好的名称，如：<a href="http://www.baidu.com，这种由文字组成的名称，显而易见要更容易记忆。但是计算机不认识这种名称，我们可以利用一种名字解析服务将名称转化成IP地址。从而我们就可以利用名称来直接访问网络中设备了。除此之外还有一个重要功能，利用名称解析服务可以实现主机和IP的解耦（解除绑定），即：当主机IP变化时，只需要修改名称服务即可，用户仍然可以通过原有的名称进行访问而不受影响。">www.baidu.com，这种由文字组成的名称，显而易见要更容易记忆。但是计算机不认识这种名称，我们可以利用一种名字解析服务将名称转化成IP地址。从而我们就可以利用名称来直接访问网络中设备了。除此之外还有一个重要功能，利用名称解析服务可以实现主机和IP的解耦（解除绑定），即：当主机IP变化时，只需要修改名称服务即可，用户仍然可以通过原有的名称进行访问而不受影响。</a></p>
+<p>如下面所述：</p>
+<p>本地名称解析配置文件：hosts</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><pre><code class="hljs shell">Linux：/etc/hosts<br>Windwos：%WINDIR%/system32/drivers/etc/hosts<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">格式</span><br><br>112.114.112.3      www.baidu.com.     www  <br>93.46.8.89         www.google.com     google<br><br></code></pre></td></tr></table></figure>
+
+<p>​    DNS：Domain Name System 域名系统应用层协议，是互联网的一项服务。他作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网，基于C/S架构，服务端：53/udp，53/tcp</p>
+<p>BIND：Bekerly Internet Name Domain，由ISC （<a target="_blank" rel="noopener" href="http://www.isc.org)提供的dns软件实现dns域名结构/">www.isc.org）提供的DNS软件实现DNS域名结构</a></p>
+<p><img src="image-20230810202706342-1692783730239.png" srcset="/img/loading.gif" lazyload alt="image-20230810202706342"></p>
+<ul>
+<li><p>根域：全球根服务器节点只有13个，10在美国，1个在荷兰，一个瑞典，一个日本</p>
+</li>
+<li><p>一级域名：Top Level Domain：tld</p>
+<p>三类：组织域、国家域（.cn, .ca, gk, .tw）、反向域</p>
+<p>com，edu，mil，gov，net，org，int，arpa</p>
+</li>
+<li><p>二级域名：magedu.com</p>
+</li>
+<li><p>三级域名：study.magedu.com</p>
+</li>
+<li><p>最多可达到127级域名</p>
+</li>
+</ul>
+<h2 id="1-2-DNS服务工作原理"><a href="#1-2-DNS服务工作原理" class="headerlink" title="1.2 DNS服务工作原理"></a>1.2 DNS服务工作原理</h2><p><img src="image-20230810203252024-1692783730239.png" srcset="/img/loading.gif" lazyload alt="image-20230810203252024"></p>
+<h2 id="1-3-DNS查询类型"><a href="#1-3-DNS查询类型" class="headerlink" title="1.3 DNS查询类型"></a>1.3 DNS查询类型</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">https://help.aliyun.com/document_detail/102237.html<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/2984663361/p336439.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li><p>递归查询：</p>
+<p>是指DNS服务器在收到用户发起的请求时，必须向用户返回一个准确的查询结果。如果DNS服务器本地没有存储与之对应的信息，则该服务器需要询问其他服务器，并将返回的查询结果提交给用户。</p>
+<p>一般来说，由客户机发起的和本地DNS服务器之间属于递归查询，即当客户机向DNS服务器发出请求后，若DNS服务器本身不能解析，则会向其他的DNS服务器发出查询请求，得到最终的肯定或否定的结果后转交给客户机。此查询的源和目标保持不变，为了查询结果客户机只需要发起一次查询。</p>
+<p>递归算法：客户端向LocalDNS发起域名查询–&gt;localDNS不知道对应域名的IP–&gt;但他知道谁知道–&gt;他代为帮客户端去询问其他DNS服务器–&gt;最后返回最终结果</p>
+</li>
+<li><p>迭代查询：</p>
+<p>是指DNS服务器在收到用户发起的请求时，并不直接回复查询结果，而是返回给用户另一台DNS服务器的地址，用户再向这台DNS服务器提交请求，这样依次反复，直到返回查询结果。</p>
+<p>一般情况下，本地的DNS服务器向其他DNS服务器的查询属于迭代查询，如：若对方不能放回权威的结果，则会向下一个DNS服务器（参考前一个DNS服务器返回的结果）再次发起进行查询，直到返回查询的结果为止。此查询的源不变，但查询的目标不断变化，为了查询到结果一般需要发起多次查询</p>
+<p>迭代算法：客户端向LocalDNS发起域名查询–&gt;localDNS不知道对应域名的IP–&gt;但他知道谁知道并推荐客户端应该找谁–&gt;客户端自己去找它</p>
+</li>
+<li><p>DNS缓存</p>
+<p>DNS缓存是将解析数据存储在靠近发起请求的客户端的位置，也可以说DNS数据是可以缓存在任意位置，最终目的是以此减少递归查询过程，可以更快的让用户获得请求结果。</p>
+</li>
+</ul>
+<h2 id="1-4-名称服务器"><a href="#1-4-名称服务器" class="headerlink" title="1.4 名称服务器"></a>1.4 名称服务器</h2><p>Name Server，域内负责解析本域内的名称的DNS服务器</p>
+<h2 id="1-5-解析类型"><a href="#1-5-解析类型" class="headerlink" title="1.5 解析类型"></a>1.5 解析类型</h2><ul>
+<li><p>FQDN–&gt;IP 正向解析</p>
+</li>
+<li><p>IP–&gt;FQDN 反向解析</p>
+<p>注意：正反向解析是两个不同的名称空间，是两棵不同的解析树</p>
+</li>
+</ul>
+<h2 id="1-6-完整的查询请求经过的流程"><a href="#1-6-完整的查询请求经过的流程" class="headerlink" title="1.6 完整的查询请求经过的流程"></a>1.6 完整的查询请求经过的流程</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">client --&gt;hosts文件--&gt; client DNS service local cache --&gt; DNS server (recursion递归) --&gt; DNS Server cache --&gt;DNS iteration(迭代) --&gt; 根 --&gt;顶级域名DNS --&gt; 二级域名DNS<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="2-DNS服务相关概念和技术"><a href="#2-DNS服务相关概念和技术" class="headerlink" title="2 DNS服务相关概念和技术"></a>2 DNS服务相关概念和技术</h1><h2 id="2-1-DNS服务器的类型"><a href="#2-1-DNS服务器的类型" class="headerlink" title="2.1 DNS服务器的类型"></a>2.1 DNS服务器的类型</h2><ul>
+<li>主DNS服务器</li>
+<li>从DNS服务器</li>
+<li>缓存DNS服务器</li>
+</ul>
+<h3 id="2-1-1-主DNS服务器"><a href="#2-1-1-主DNS服务器" class="headerlink" title="2.1.1 主DNS服务器"></a>2.1.1 主DNS服务器</h3><p>管理和维护所负责解析的域内解析库的服务器</p>
+<h3 id="2-1-2-从DNS服务器"><a href="#2-1-2-从DNS服务器" class="headerlink" title="2.1.2 从DNS服务器"></a>2.1.2 从DNS服务器</h3><p>从主服务器或从服务器“复制” （区域传输）解析库副本</p>
+<ul>
+<li>序列号：解析库版本号，主服务器解析库变化时，其序列号递增</li>
+<li>刷新时间间隔：从服务器从主服务器请求同步解析的时间间隔</li>
+<li>重试时间间隔：从服务器请求同步失败时，再次尝试时间间隔</li>
+<li>过期时长：从服务器练习不到主服务器时，多久后停止服务</li>
+<li>通知机制：主服务器解析库发生变化时，会主动通知从服务器</li>
+</ul>
+<h2 id="2-2-区域传输"><a href="#2-2-区域传输" class="headerlink" title="2.2 区域传输"></a>2.2 区域传输</h2><ul>
+<li>完全传输：传送整个解析库</li>
+<li>增量传输：传递解析库变化的那部分内容</li>
+</ul>
+<h2 id="2-3-解析形式"><a href="#2-3-解析形式" class="headerlink" title="2.3 解析形式"></a>2.3 解析形式</h2><ul>
+<li><p>FQDN–&gt;IP 正向解析</p>
+</li>
+<li><p>IP–&gt;FQDN 反向解析</p>
+<p>注意：正反向解析是两个不同的名称空间，是两棵不同的解析树</p>
+</li>
+</ul>
+<h2 id="2-4-负责本地域名的正向和反向解析库"><a href="#2-4-负责本地域名的正向和反向解析库" class="headerlink" title="2.4 负责本地域名的正向和反向解析库"></a>2.4 负责本地域名的正向和反向解析库</h2><ul>
+<li>正向区域</li>
+<li>反向区域</li>
+</ul>
+<h2 id="2-5-解析答案"><a href="#2-5-解析答案" class="headerlink" title="2.5 解析答案"></a>2.5 解析答案</h2><ul>
+<li>肯定答案：存在对应的查询结果</li>
+<li>否定答案：请求的条目不存在等原因导致无法返回结果</li>
+<li>权威答案：直接由存有此查询结果的DNS服务器（权威 服务器）返回的答案</li>
+<li>非权威答案：由其他非权威服务器返回的查询答案</li>
+</ul>
+<h2 id="2-6-各种资源记录"><a href="#2-6-各种资源记录" class="headerlink" title="2.6 各种资源记录"></a>2.6 各种资源记录</h2><p>区域解析库：由众多资源记录RP（resource record）组成</p>
+<p>记录类型：A ，AAAA, PTR, SOA, NS, CNAME,MX</p>
+<ul>
+<li>SOA：Start of authority，起始授权记录；一个区域解析库有且仅能有一个SOA记录，必须位于解析库的第一条记录</li>
+<li>A：IPv4地址，作用FQDN –&gt;IP</li>
+<li>AAAA：FQDN –&gt;IPv6</li>
+<li>PTR：poinTeR ，IP –&gt;FQDN</li>
+<li>NS:  Name Server，专用于标明当前区域的DNS服务器</li>
+<li>CNAME：Canonical Name，别名记录</li>
+<li>MX，mail exchanger，邮件交换服务器</li>
+<li>TXT：对域名进行标识和说明的一种方式，一般做验证记录时会使用此项，如：SPF（反垃圾邮件）记录，https验证等</li>
+</ul>
+<h3 id="2-6-1-资源记录定义"><a href="#2-6-1-资源记录定义" class="headerlink" title="2.6.1 资源记录定义"></a>2.6.1 资源记录定义</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">name    [TTL]    IN   rr_type   value<br></code></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ol>
+<li>TTL可以全局继承，写在首行即可</li>
+<li>使用”@“符号可用于引用当前区域的域名</li>
+<li>同一个名字可以通过多条记录定义多个不同的值；此时DNS服务器会以轮询方式响应</li>
+<li>同一个值也可能有多个不同的定义名字；通过多个不同的名字指向同一个值进行定义；此仅表示通过多个不同的名字可以找到同一个主机</li>
+</ol>
+<p>面试题：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http">1. 我的网站域名需要更改，如何使其更快的生效？<br>答：修改之后在主DNS服务器上主动推送给从服务器进行更新，并清除DNS服务器缓存<br>.<br>2. 更改TTL值为多少比较合适呢？ 是如何生效的？<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-2-SOA记录"><a href="#2-6-2-SOA记录" class="headerlink" title="2.6.2 SOA记录"></a>2.6.2 SOA记录</h3><p>name: 当前区域的名字，例如”magedu.org“</p>
+<p>value：由多部分组成</p>
+<p>注意：</p>
+<ol>
+<li>当前区域的主DNS服务器和FQDN，也可以使用当前区域的名字，只是注释功能，可以不需要配置对应的NS记录和A记录</li>
+<li>当前区域管理员的邮箱地址；但地址中不能使用@符号，一般可以用.替换，例如：admin.magedu.org</li>
+<li>主从服务区域传输相关定义以及否定的答案的统一TTL</li>
+</ol>
+<p>范例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs http">magedu.org.    86400    IN    SOA    ns.magedu.org.  nsadmin.magedu.org.    (<br>					20230810 	;序列号<br>					10	M		;刷新时间<br>					10M			;重试时间<br>					1W			;过期时间<br>					1D			;否定答案的TTL值<br>					）<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-3-NS记录"><a href="#2-6-3-NS记录" class="headerlink" title="2.6.3 NS记录"></a>2.6.3 NS记录</h3><p>name：当前区域的名字</p>
+<p>value：当前区域的某个DNS服务器的名字，例如：ns.magedu.org.</p>
+<p>注意：</p>
+<ol>
+<li>相邻的两个资源记录的name相同时，后续的可省略</li>
+<li>对NS记录而言，任何一个ns记录后面的服务器名字，都应该在后续有一个A记录</li>
+<li>一个区域可以有多个NS记录</li>
+</ol>
+<p>范例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">magedu.org    IN   NS     ns1.magedu.org.<br>magedu.org    IN   NS     ns2.magedu.org.<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-4-MX记录"><a href="#2-6-4-MX记录" class="headerlink" title="2.6.4 MX记录"></a>2.6.4 MX记录</h3><p>name：当前区域的名字</p>
+<p>value：当前区域的某邮件服务器（smtp）的主机名</p>
+<p>注意：</p>
+<ol>
+<li>一个区域内，MX记录可以有多个；但每个记录的value之前应该有一个数字（0-99），表示此服务器的优先级；数字越小优先级越高</li>
+<li>对MX记录而言，任何一个MX记录后面的服务器名字，都应该在后续有一个A记录</li>
+</ol>
+<p>范例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs HTTP">magedu.org.   IN    MX    10   mx1.magedu.org.<br>			  IN    MX    20   mx1.magedu.org.<br>mx1					A		10.0.0.100<br>mx2					A       10.0.0.200<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-5-A记录"><a href="#2-6-5-A记录" class="headerlink" title="2.6.5  A记录"></a>2.6.5  A记录</h3><p>name:    某主机的FQDN，例如：<a target="_blank" rel="noopener" href="http://www.magedu.org/">www.magedu.org</a>.</p>
+<p>value:    主机名对应主机的IP地址</p>
+<p>避免用户写错名称时给错误答案，可以通过泛域名解析至某特定地址</p>
+<p>范例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs http">www.magedu.org.   		IN     	A  1.11.1.1<br>www.magedu.org.   		IN     	A  2.2.2.2<br>mx1.magedu.org.   		IN     	A  3.3.3.3<br>mx2.magedu.org.   		IN      A  4.4.4.4<br>$GENERATE 1-254 HOST$	IN		A  5.5.5.$<br>*.magedu.org.			IN 		A  6.6.6.6<br>magedu.org.				IN		A  7.7.7.7<br><br>#注意：如果有和DNS的IP的相同多个的多个同名的A记录，优先返回DNS的本机IP<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-6-AAAA"><a href="#2-6-6-AAAA" class="headerlink" title="2.6.6  AAAA"></a>2.6.6  AAAA</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">name ：FQDN<br>value ：	IPv6<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-7-PTR"><a href="#2-6-7-PTR" class="headerlink" title="2.6.7 PTR"></a>2.6.7 PTR</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">name： IP， 有特定格式，把IP地址反过来写，1.2.3.4，要写4.3.2.1:而有特定后缀：in-addr.arpa.,所以完整写法为：4.3.2.1.in-addr.arpa.<br></code></pre></td></tr></table></figure>
+
+<p>注意：网络地址及后缀可省略；主机地址依然需要反着写</p>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">4.3.2.1.in-addr.arpa. IN PTR  www.magedu.org.<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如1.2.3为网络地址，可简写成：</span><br>4	IN	PTR		www.magedu.org.<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-8-CNAME别名记录"><a href="#2-6-8-CNAME别名记录" class="headerlink" title="2.6.8 CNAME别名记录"></a>2.6.8 CNAME别名记录</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">name；别名的FQDN<br>value：真正名字的FQDN<br></code></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">www.magedu.org.    IN   CNAME    websrv.magedu.org.<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-7-子域名授权"><a href="#2-7-子域名授权" class="headerlink" title="2.7 子域名授权"></a>2.7 子域名授权</h2><p>每个域的名称服务器，都是通过其上级名称服务器在解析库进行授权，类似根域授权tld</p>
+<p>glue record：粘合记录，父域授权子域的记录</p>
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">.com.     IN      NS     ns1.com.<br>.com.     IN	  NS 	 ns2.com.<br>ns1.com.    IN      NS    1.1.1.1<br>ns2.com.    IN	  NS 	  2.2.2.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">magedu.org.   在.com的名称服务器上，解析库中添加资源记录</span><br>magedu.org.   		IN     	NS    ns1.magedu.org.<br>magedu.org.   		IN     	NS    ns2.magedu.org.<br>magedu.org.   		IN     	NS    ns3.magedu.org.<br>ns1.magedu.org.   		IN     	A  2.2.2.2<br>ns2.magedu.org.   		IN     	A  1.11.1.1<br>ns3.magedu.org.   		IN     	A  2.2.2.2<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-8-互联网域名"><a href="#2-8-互联网域名" class="headerlink" title="2.8 互联网域名"></a>2.8 互联网域名</h2><p>注册之后，用自己专用的服务来解析</p>
+<p>管理后台：把NS记录指向的服务器名称，和A记录指向的服务器地址</p>
+<p><img src="image-20230817200609641-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230817200609641"></p>
+<h2 id="2-9-whois"><a href="#2-9-whois" class="headerlink" title="2.9 whois"></a>2.9 whois</h2><p>范例：whois查询域名信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell">[20:08:03 root@localhost ~]#yum -y install whois<br>[20:09:36 root@localhost ~]#whois magedu.com<br>   Domain Name: MAGEDU.COM<br>   Registry Domain ID: 1683438754_DOMAIN_COM-VRSN<br>   Registrar WHOIS Server: grs-whois.hichina.com<br>   Registrar URL: http://www.net.cn<br>   Updated Date: 2022-06-18T03:13:34Z<br>   Creation Date: 2011-10-22T03:22:03Z<br>   Registry Expiry Date: 2023-10-22T03:22:03Z<br>   Registrar: Alibaba Cloud Computing (Beijing) Co., Ltd.<br>   Registrar IANA ID: 420<br>   Registrar Abuse Contact Email: DomainAbuse@service.aliyun.com<br>   Registrar Abuse Contact Phone: +86.95187<br>   Domain Status: ok https://icann.org/epp#ok<br>   Name Server: NS1.ALIDNS.COM<br>   Name Server: NS2.ALIDNS.COM<br>   DNSSEC: unsigned<br><br></code></pre></td></tr></table></figure>
+
+<p>从网站查询，连接：</p>
+<p><a target="_blank" rel="noopener" href="https://www.toolnb.com/domaininfo/wangxiaochun.com.html">https://www.toolnb.com/domaininfo/wangxiaochun.com.html</a></p>
+<p><img src="image-20230817201224924-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230817201224924"></p>
+<h2 id="2-10-HttpDNS"><a href="#2-10-HttpDNS" class="headerlink" title="2.10 HttpDNS"></a>2.10 HttpDNS</h2><p>略</p>
+<h1 id="3-DNS软件bind"><a href="#3-DNS软件bind" class="headerlink" title="3 DNS软件bind"></a>3 DNS软件bind</h1><p>DNS服务器软件：bind，powerdns，dnsmasq，unbound，coredns</p>
+<h2 id="3-1-BIND"><a href="#3-1-BIND" class="headerlink" title="3.1 BIND"></a>3.1 BIND</h2><p>yum list all bind*</p>
+<ul>
+<li>bind：服务器</li>
+<li>bind-utils：客户端</li>
+<li>bind-libs：相关库，依赖关系自动安装</li>
+<li>bind-chroot：安全包</li>
+</ul>
+<p>范例：安装bind软件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[20:24:45 root@localhost ~]#yum -y install bind bind-utils<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="4-实现主DNS服务器"><a href="#4-实现主DNS服务器" class="headerlink" title="4 实现主DNS服务器"></a>4 实现主DNS服务器</h1><h2 id="4-1-主DNS服务器配置"><a href="#4-1-主DNS服务器配置" class="headerlink" title="4.1 主DNS服务器配置"></a>4.1 主DNS服务器配置</h2><ol>
+<li><p>在主配置文件中定义区域</p>
+<p><img src="image-20230818212031094-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212031094"></p>
+</li>
+<li><p>定义区域解析库文件</p>
+<p>内容包括：</p>
+<ul>
+<li>宏定义</li>
+<li>资源记录</li>
+</ul>
+<p>范例：区域数据库</p>
+<p><img src="image-20230818212147468-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212147468"></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">   <br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="4-2-主配置文件语法检查"><a href="#4-2-主配置文件语法检查" class="headerlink" title="4.2 主配置文件语法检查"></a>4.2 主配置文件语法检查</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">[21:05:35 root@localhost ~]#named-checkconf <br></code></pre></td></tr></table></figure>
+
+<h2 id="4-3-解析库文件语法检查"><a href="#4-3-解析库文件语法检查" class="headerlink" title="4.3 解析库文件语法检查"></a>4.3 解析库文件语法检查</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">[21:05:44 root@localhost ~]#named-checkzone xiaohexie.org /var/named/xiaohexie.org.zone <br></code></pre></td></tr></table></figure>
+
+<h2 id="4-4-配置生效"><a href="#4-4-配置生效" class="headerlink" title="4.4 配置生效"></a>4.4 配置生效</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">三种方式</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">rndc reload</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">systemctl reload named</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">service named reload</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-5-DNS测试和管理工具"><a href="#4-5-DNS测试和管理工具" class="headerlink" title="4.5 DNS测试和管理工具"></a>4.5 DNS测试和管理工具</h2><h3 id="4-5-1-dig命令"><a href="#4-5-1-dig命令" class="headerlink" title="4.5.1 dig命令"></a>4.5.1 dig命令</h3><p><img src="image-20230818212613119-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212613119"></p>
+<p><img src="image-20230818212632902-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212632902"></p>
+<h3 id="4-5-2-host命令"><a href="#4-5-2-host命令" class="headerlink" title="4.5.2 host命令"></a>4.5.2 host命令</h3><p><img src="image-20230818212654248-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212654248"></p>
+<h3 id="4-5-3-nslookup命令"><a href="#4-5-3-nslookup命令" class="headerlink" title="4.5.3 nslookup命令"></a>4.5.3 nslookup命令</h3><p><img src="image-20230818212725002-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212725002"></p>
+<h3 id="4-5-3-rndc命令"><a href="#4-5-3-rndc命令" class="headerlink" title="4.5.3 rndc命令"></a>4.5.3 rndc命令</h3><p><img src="image-20230818212824986-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212824986"></p>
+<p><img src="image-20230818212836745-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818212836745"></p>
+<h2 id="4-6-实战案例：实现DNS正向主服务器"><a href="#4-6-实战案例：实现DNS正向主服务器" class="headerlink" title="4.6 实战案例：实现DNS正向主服务器"></a>4.6 实战案例：实现DNS正向主服务器</h2><h3 id="4-6-1-实验目的"><a href="#4-6-1-实验目的" class="headerlink" title="4.6.1 实验目的"></a>4.6.1 实验目的</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">搭建DNS正向主服务器，实现web服务器基于FQDN的访问<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-6-2-环境要求"><a href="#4-6-2-环境要求" class="headerlink" title="4.6.2 环境要求"></a>4.6.2 环境要求</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http">需要三台主机<br>DNS服务器：192.168.157.153<br>web服务器：192.168.157.155<br>DNS客户端：192.168.157.152<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-6-3-前提准备"><a href="#4-6-3-前提准备" class="headerlink" title="4.6.3 前提准备"></a>4.6.3 前提准备</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs http">关闭selinux<br>关闭防火墙<br>时间同步<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-6-4-实现步骤"><a href="#4-6-4-实现步骤" class="headerlink" title="4.6.4 实现步骤"></a>4.6.4 实现步骤</h3><h4 id="4-6-4-1-在DNS服务器上安装bind"><a href="#4-6-4-1-在DNS服务器上安装bind" class="headerlink" title="4.6.4.1 在DNS服务器上安装bind"></a>4.6.4.1 在DNS服务器上安装bind</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[20:18:48 root@localhost ~]#yum -y install bind bind-utils<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-6-4-1-修改bind配置文件"><a href="#4-6-4-1-修改bind配置文件" class="headerlink" title="4.6.4.1 修改bind配置文件"></a>4.6.4.1 修改bind配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell">[21:06:56 root@localhost ~]#vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉下面两行</span><br>options &#123;<br>//      listen-on port 53 &#123; 127.0.0.1; &#125;;<br>        listen-on-v6 port 53 &#123; ::1; &#125;;<br>        directory       &quot;/var/named&quot;;<br>        dump-file       &quot;/var/named/data/cache_dump.db&quot;;<br>        statistics-file &quot;/var/named/data/named_stats.txt&quot;;<br>        memstatistics-file &quot;/var/named/data/named_mem_stats.txt&quot;;<br>        secroots-file   &quot;/var/named/data/named.secroots&quot;;<br>        recursing-file  &quot;/var/named/data/named.recursing&quot;;<br>//      allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加以下内容</span><br>zone &quot;xiaohexie.org&quot; IN &#123;<br>        type master;<br>        file &quot;xiaohexie.org.zone&quot;;<br>&#125;;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-6-4-3-DNS区域数据库文件"><a href="#4-6-4-3-DNS区域数据库文件" class="headerlink" title="4.6.4.3 DNS区域数据库文件"></a>4.6.4.3 DNS区域数据库文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell">[20:52:28 root@localhost ~]#cp -p /var/named/named.localhost /var/named/xiaohexie.org.zone<br><br>[20:53:28 root@localhost ~]#vim /var/named/xiaohexie.org.zone <br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  master admin.xiaohexie.org. (<br>                                        20230818        ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>                NS      master<br>master          A       192.168.157.153<br>www             A       192.168.157.155<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-6-4-4-检查配置文件和数据库文件格式，并启动服务"><a href="#4-6-4-4-检查配置文件和数据库文件格式，并启动服务" class="headerlink" title="4.6.4.4 检查配置文件和数据库文件格式，并启动服务"></a>4.6.4.4 检查配置文件和数据库文件格式，并启动服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">[21:05:35 root@ ~]#named-checkconf <br>[21:05:44 root@ ~]#named-checkzone xiaohexie.org /var/named/xiaohexie.org.zone <br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-6-4-5-实现web服务"><a href="#4-6-4-5-实现web服务" class="headerlink" title="4.6.4.5 实现web服务"></a>4.6.4.5 实现web服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装http服务</span><br>yum install -y httpd<br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置主页</span><br>echo xiaohexie.org &gt; /var/www/html/index.html<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动服务</span><br>systemctl enable --now httpd<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-6-4-6-在客户端实现测试"><a href="#4-6-4-6-在客户端实现测试" class="headerlink" title="4.6.4.6 在客户端实现测试"></a>4.6.4.6 在客户端实现测试</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/sysconfig/network-scripts/ifcfg-ens33 <br>DNS1=192.168.157.153<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">centos7 以上版本执行现下面命令生效</span><br>nmcli con rel<br>nmcli con up ens33<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">有以下记录，即为成功</span><br>cat /etc/resolv.conf <br><span class="hljs-meta prompt_"># </span><span class="language-bash">Generated by NetworkManager</span><br>nameserver 192.168.157.153<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">测试网页，能显示则成功</span><br>curl www.xiaohexie.org<br>xiaohexie.org<br></code></pre></td></tr></table></figure>
+
+<h1 id="5-实现反向解析区域"><a href="#5-实现反向解析区域" class="headerlink" title="5 实现反向解析区域"></a>5 实现反向解析区域</h1><p>略</p>
+<h1 id="6-实现从服务器"><a href="#6-实现从服务器" class="headerlink" title="6 实现从服务器"></a>6 实现从服务器</h1><p>只有一台主DNS服务器，存在单点失败的问题，可以建立主DNS服务器的备份服务器，即从服务器来实现DNS服务器的容错机制。从服务器可以自动和主服务器进行单向的数据同步，从而和主DNS服务器一样，也可以对外提供查询服务，但从服务器不提供数据更新服务。</p>
+<h2 id="6-1-DNS从服务器"><a href="#6-1-DNS从服务器" class="headerlink" title="6.1 DNS从服务器"></a>6.1 DNS从服务器</h2><ol>
+<li>应该为一台独立的名称服务器</li>
+<li>主服务器的区域解析库文件中必须有一条NS记录指向从服务器</li>
+<li>从服务器只需要定义区域，而无须提供解析库文件；解析库文件应该放置于/var/named/slaves/目录中</li>
+<li>主服务器得允许从服务器作区域传送</li>
+<li>主从服务器时间应该同步，可通过ntp进行</li>
+<li>bind程序得版本应该保持一致；否则，应该从高主低</li>
+</ol>
+<h2 id="6-2-定义从区域"><a href="#6-2-定义从区域" class="headerlink" title="6.2 定义从区域"></a>6.2 定义从区域</h2><p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">zone &quot;ZONE_NAME&quot; IN &#123;<br>	type slave;<br>	masters &#123;	master_ip;&#125;;<br>	file &quot;slavers/zone_name.zone&quot;;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-3-实战案例-：实现DNS从服务器"><a href="#6-3-实战案例-：实现DNS从服务器" class="headerlink" title="6.3 实战案例 ：实现DNS从服务器"></a>6.3 实战案例 ：实现DNS从服务器</h2><h3 id="6-3-1-实验目的"><a href="#6-3-1-实验目的" class="headerlink" title="6.3.1 实验目的"></a>6.3.1 实验目的</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">搭建DNS主从服务器架构实现DNS服务器冗余<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-3-2-环境要求"><a href="#6-3-2-环境要求" class="headerlink" title="6.3.2 环境要求"></a>6.3.2 环境要求</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http">需要4台主机<br>1、DNS客户端：10.0.0.100<br>2、xiaohexie.org 域主DNS服务器：10.0.0.3<br>3、xiaohexie.org 域从DNS服务器：10.0.0.4<br>4、www.xiaohexie.org   web服务器：10.0.0.5<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-3-3-提前准备"><a href="#6-3-3-提前准备" class="headerlink" title="6.3.3 提前准备"></a>6.3.3 提前准备</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http">#关闭selinux<br>getenfore<br>#关闭防火墙<br>systemctl disable --now firewalld<br>时间同步<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-3-4-实现步骤"><a href="#6-3-4-实现步骤" class="headerlink" title="6.3.4 实现步骤"></a>6.3.4 实现步骤</h3><h4 id="6-3-4-1-主DNS服务器配置"><a href="#6-3-4-1-主DNS服务器配置" class="headerlink" title="6.3.4.1 主DNS服务器配置"></a>6.3.4.1 主DNS服务器配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在域主DNS服务器：10.0.0.3上</span><br>yum -y install bind<br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉下面两行</span><br>options &#123;<br>//      listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//      allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">只允许这台主机进行区域传输</span><br>		allow-transfer &#123; 192.168.157.166;&#125;;<br><br>vim /etc/named.rfc1912.zones<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加以下内容</span><br>zone &quot;xiaohexie.org&quot; &#123;<br>        type master;<br>        file &quot;xiaohexie.org.zone&quot;;<br>&#125;;<br><br><br>cp -p /var/named/named.localhost /var/named/xiaohexie.org.zone<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果没有-p，需要改权限<span class="hljs-built_in">chgrp</span> named /var/named/xiaohexie.org.zone</span> <br><br>vim /var/named/xiaohexie.org.zone<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  master admin.xiaohexie.org. (<br>                                        20230818        ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>                NS      master<br>                NS      slave<br>master          A       192.168.157.153<br>slave           A       192.168.157.146<br>www             A       192.168.157.155<br><br><br>named-checkconf <br>named-checkzone xiaohexie.org /var/named/xiaohexie.org.zone <br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+<h4 id="6-3-4-2-实现从DNS服务端配置"><a href="#6-3-4-2-实现从DNS服务端配置" class="headerlink" title="6.3.4.2 实现从DNS服务端配置"></a>6.3.4.2 实现从DNS服务端配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在域主DNS服务器：10.0.0.4上</span><br>yum -y install bind<br><br>vim /etc/named.conf<br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">不允许其他主机进行区域传输</span><br>    allow-transfer &#123; none;&#125;;<br><br><br>vim /etc/named.rfc1912.zones<br>zone &quot;xiaohexie.org&quot; &#123;<br>    type slave;<br>    masters &#123; 192.168.157.153;&#125;;<br>    file &quot;slaves/xiaohexie.org.slave&quot;;<br>&#125;;<br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br>ls /var/named/slaves/xiaohexie.org.slave 查看区域数据库文件是否生成<br></code></pre></td></tr></table></figure>
+
+<h4 id="6-3-4-3-客户端测试主从服务器架构"><a href="#6-3-4-3-客户端测试主从服务器架构" class="headerlink" title="6.3.4.3 客户端测试主从服务器架构"></a>6.3.4.3 客户端测试主从服务器架构</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/sysconfig/network-scripts/ifcfg-ens33<br>DNS1=10.0.0.3<br>DNS2=10.0.0.4<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">验证从DNS服务器是否可以查询</span><br>dig www.xiaohexie.org<br><br>;; ADDITIONAL SECTION:<br>master.xiaohexie.org.	86400	IN	A	10.0.0.3<br>slave.xiaohexie.org.	86400	IN	A	10.0.0.4<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在主DNS服务器停止DNS服务</span><br>systemctl stop named<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#验证从DNS服务器仍然可以查询</span></span><br>dig www.xiaohexie.org<br><br>;; Query time: 0 msec<br>;; SERVER: 10.0.0.4#53(10.0.0.4)<br>;; WHEN: Wed Aug 23 23:57:48 CST 2023<br>;; MSG SIZE  rcvd: 151<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="7-实现子域名"><a href="#7-实现子域名" class="headerlink" title="7 实现子域名"></a>7 实现子域名</h1><h2 id="7-1-子域委派授权"><a href="#7-1-子域委派授权" class="headerlink" title="7.1 子域委派授权"></a>7.1 子域委派授权</h2><p>将子域委派给其他主机管理，实现分布式DNS数据库</p>
+<p>正向解析区域子域方法</p>
+<p>范例：定义两个子域区域</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs http">shanghai.xiaohexie.org.		IN	NS	ns1.ops.xiaohexie.org<br>shanghai.xiaohexie.org.		IN	NS	ns2.ops.xiaohexie.org<br>sz.xiaohexie.org.			IN	NS	ns1.sz.xiaohexie.org<br>bj.xiaohexie.org.			IN	NS	ns1.bj.xiaohexie.org<br>ns1.ops.xiaohexie.org		IN  NS  1.1.1.1<br>ns2.ops.xiaohexie.org		IN	NS	1.1.1.2<br>ns1.sz.xiaohexie.org		IN 	NS	1.1.1.3<br>ns1.bj.xiaohexie.org		IN	NS	1.1.1.4	<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-2-范例：实现DNS父域和子域服务"><a href="#7-2-范例：实现DNS父域和子域服务" class="headerlink" title="7.2 范例：实现DNS父域和子域服务"></a>7.2 范例：实现DNS父域和子域服务</h2><h3 id="7-2-1-实验目的"><a href="#7-2-1-实验目的" class="headerlink" title="7.2.1 实验目的"></a>7.2.1 实验目的</h3><p><img src="image-20230823160658348.png" srcset="/img/loading.gif" lazyload alt="image-20230823160658348"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html">搭建DNS父域和子域服务<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-2-2-环境要求"><a href="#7-2-2-环境要求" class="headerlink" title="7.2.2 环境要求"></a>7.2.2 环境要求</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs http">需要5台主机<br>1、DNS父域服务器：10.0.0.3<br>2、DNS子域服务器：10.0.0.4<br>3、父域web服务器：10.0.0.5			www.xiaohexie.org<br>4、子域web服务器：10.0.0.15		www.shanghai.xiaohexie.org<br>5、DNS客户端：10.0.0.100<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-2-3-前提准备"><a href="#7-2-3-前提准备" class="headerlink" title="7.2.3 前提准备"></a>7.2.3 前提准备</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs http">关闭selinux<br>关闭防火墙<br>时间同步<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-2-4-实现步骤"><a href="#7-2-4-实现步骤" class="headerlink" title="7.2.4 实现步骤"></a>7.2.4 实现步骤</h3><h4 id="7-2-4-1-在DNS父域服务器上实现xiaohexie-org域的主DNS服务"><a href="#7-2-4-1-在DNS父域服务器上实现xiaohexie-org域的主DNS服务" class="headerlink" title="7.2.4.1 在DNS父域服务器上实现xiaohexie.org域的主DNS服务"></a>7.2.4.1 在DNS父域服务器上实现xiaohexie.org域的主DNS服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在域主DNS服务器：10.0.0.3上</span><br>yum -y install bind<br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉下面两行</span><br>options &#123;<br>//      listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//      allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">只允许这台主机进行区域传输</span><br>		allow-transfer &#123; 10.0.0.4;&#125;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">建议关闭加密验证</span><br>dnssec-enable no;<br>dnssec-validation no;<br><br><br>vim /etc/named.rfc1912.zones<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加以下内容</span><br>zone &quot;xiaohexie.org&quot; &#123;<br>        type master;<br>        file &quot;xiaohexie.org.zone&quot;;<br>&#125;;<br><br><br>cp -p /var/named/named.localhost /var/named/xiaohexie.org.zone<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果没有-p，需要改权限<span class="hljs-built_in">chgrp</span> named /var/named/xiaohexie.org.zone</span> <br><br>vim /var/named/xiaohexie.org.zone<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  master admin.xiaohexie.org. (<br>                                        20230818        ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>                NS      master<br>shanghai        NS      shanghains<br>master          A       10.0.0.3<br>shanghains      A       10.0.0.4<br>www             A       10.0.0.5<br>www             A       3.3.3.3<br><br><br><br><br>named-checkconf <br>named-checkzone xiaohexie.org /var/named/xiaohexie.org.zone <br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+<h4 id="7-2-3-2-实现子域的DNS服务器"><a href="#7-2-3-2-实现子域的DNS服务器" class="headerlink" title="7.2.3.2 实现子域的DNS服务器"></a>7.2.3.2 实现子域的DNS服务器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在域主DNS服务器：10.0.0.4上</span><br>yum -y install bind<br><br>vim /etc/named.conf<br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">不允许其他主机进行区域传输</span><br>    allow-transfer &#123; none;&#125;;<br><br><br>vim /etc/named.rfc1912.zones<br>zone &quot;shanghai.xiaohexie.org&quot; &#123;<br>        type master;<br>        file &quot;shanghai.xiaohexie.org.zone&quot;;<br>&#125;;<br><br><br>cp /var/named/named.localhost  /var/named/shanghai.xiaohexie.org.zone<br><br>vim /var/named/shanghai.xiaohexie.org.zone<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  shanghains admin.xiaohexie.org. (<br>                                        2023    ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>        		NS      shanghains<br>shanghains		A       10.0.0.4<br>www     		A       10.0.0.6<br>www     		A       4.4.4.4<br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+<h4 id="7-2-3-4-在父域和子域的web服务器上安装httpd服务"><a href="#7-2-3-4-在父域和子域的web服务器上安装httpd服务" class="headerlink" title="7.2.3.4 在父域和子域的web服务器上安装httpd服务"></a>7.2.3.4 在父域和子域的web服务器上安装httpd服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装http服务</span><br>yum install -y httpd<br>systemctl start httpd<br></code></pre></td></tr></table></figure>
+
+<h4 id="7-2-3-5-客户端测试"><a href="#7-2-3-5-客户端测试" class="headerlink" title="7.2.3.5 客户端测试"></a>7.2.3.5 客户端测试</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">客户端DNS指向父域服务器10.0.0.3</span><br><br>[root@localhost ~]# dig www.shanghai.xiaohexie.org<br><br>; &lt;&lt;&gt;&gt; DiG 9.11.4-P2-RedHat-9.11.4-26.P2.el7_9.14 &lt;&lt;&gt;&gt; www.shanghai.xiaohexie.org<br>;; global options: +cmd<br>;; Got answer:<br>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 6066<br>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 1, ADDITIONAL: 2<br><br>;; OPT PSEUDOSECTION:<br>; EDNS: version: 0, flags:; udp: 1232<br>;; QUESTION SECTION:<br>;www.shanghai.xiaohexie.org.	IN	A<br><br>;; ANSWER SECTION:<br>www.shanghai.xiaohexie.org. 86400 IN	A	10.0.0.6<br>www.shanghai.xiaohexie.org. 86400 IN	A	4.4.4.4<br><br>;; AUTHORITY SECTION:<br>shanghai.xiaohexie.org.	86400	IN	NS	shanghains.xiaohexie.org.<br><br>;; ADDITIONAL SECTION:<br>shanghains.xiaohexie.org. 86400	IN	A	10.0.0.4<br><br>;; Query time: 2 msec<br>;; SERVER: 10.0.0.3#53(10.0.0.3)<br>;; WHEN: Thu Aug 24 01:34:40 CST 2023<br>;; MSG SIZE  rcvd: 128<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="8-实现DNS转发（缓存）服务器"><a href="#8-实现DNS转发（缓存）服务器" class="headerlink" title="8 实现DNS转发（缓存）服务器"></a>8 实现DNS转发（缓存）服务器</h1><p>略</p>
+<h1 id="9-实现智能DNS"><a href="#9-实现智能DNS" class="headerlink" title="9 实现智能DNS"></a>9 实现智能DNS</h1><h2 id="9-4-实战案例：利用view实现智能DNS"><a href="#9-4-实战案例：利用view实现智能DNS" class="headerlink" title="9.4 实战案例：利用view实现智能DNS"></a>9.4 实战案例：利用view实现智能DNS</h2><h2 id="9-4-1-环境要求"><a href="#9-4-1-环境要求" class="headerlink" title="9.4.1 环境要求"></a>9.4.1 环境要求</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">需要5台主机<br>DNS主服务器：10.0.0.4, 192.168.0.1<br>web服务器1： 10.0.0.129<br>web服务器2： 192.168.0.2<br>DNS客户端1：192.168.0.100<br>DNS客户端2：10.0.0.200<br></code></pre></td></tr></table></figure>
+
+<h2 id="9-4-2-准备"><a href="#9-4-2-准备" class="headerlink" title="9.4.2  准备"></a>9.4.2  准备</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">关闭selinux<br>关闭防火墙<br>时间同步<br></code></pre></td></tr></table></figure>
+
+<h2 id="9-4-3-实现步骤"><a href="#9-4-3-实现步骤" class="headerlink" title="9.4.3 实现步骤"></a>9.4.3 实现步骤</h2><h3 id="9-4-3-1-DNS服务器网卡配置"><a href="#9-4-3-1-DNS服务器网卡配置" class="headerlink" title="9.4.3.1 DNS服务器网卡配置"></a>9.4.3.1 DNS服务器网卡配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#配置两个网卡</span></span><br>eth0：10.0.0.4<br>eth1：192.168.0.1<br>ip a<br>2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000<br>    link/ether 00:0c:29:2c:30:b9 brd ff:ff:ff:ff:ff:ff<br>    altname enp3s0<br>    altname ens160<br>    inet 10.0.0.4/24 brd 10.0.0.255 scope global dynamic noprefixroute eth0<br>       valid_lft 1525sec preferred_lft 1525sec<br>    inet6 fe80::9397:ffd3:db85:7b3a/64 scope link noprefixroute<br>       valid_lft forever preferred_lft forever<br>3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000<br>    link/ether 00:0c:29:2c:30:c3 brd ff:ff:ff:ff:ff:ff<br>    altname enp19s0<br>    altname ens224<br>    inet 192.168.0.1/24 brd 192.168.0.255 scope global dynamic noprefixroute eth1<br>       valid_lft 1488sec preferred_lft 1488sec<br>    inet6 fe80::c2ca:61a7:1c9b:f2b6/64 scope link noprefixroute<br>       valid_lft forever preferred_lft forever<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="9-4-3-2-主DNS服务端配置文件实现view"><a href="#9-4-3-2-主DNS服务端配置文件实现view" class="headerlink" title="9.4.3.2 主DNS服务端配置文件实现view"></a>9.4.3.2 主DNS服务端配置文件实现view</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1、安装<span class="hljs-built_in">bind</span></span><br>yum -y install bind<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2、修改文件</span><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#使用//注释掉下面几行：</span></span><br>//      listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//      allow-query     &#123; localhost; &#125;;<br>//zone &quot;.&quot; IN &#123;<br>//      type hint;<br>//      file &quot;named.ca&quot;;<br>//&#125;;<br>//include &quot;/etc/named.rfc1912.zones&quot;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3、添加ACL</span><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#在文件最前面添加下面几行</span></span><br>acl beijingnet &#123;<br>        10.0.0.0/24;<br>&#125;;<br><br>acl shanghainet &#123;<br>        192.168.0.0/24;<br>&#125;;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">4、创建view</span><br>vim /etc/named.conf<br><br>view    beijingview &#123;<br>        match-clients &#123; beijingnet;&#125;;<br>        include &quot;/etc/named.rfc1912.zones.bj&quot;;<br>&#125;;<br>view    shanghaiview &#123;<br>        match-clients &#123; shanghainet;&#125;;<br>        include &quot;/etc/named.rfc1912.zones.sh&quot;;<br>&#125;;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="9-4-3-3-实现区域配置文件"><a href="#9-4-3-3-实现区域配置文件" class="headerlink" title="9.4.3.3 实现区域配置文件"></a>9.4.3.3 实现区域配置文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/named.rfc1912.zones.bj<br>zone &quot;.&quot; IN &#123;<br>        type hint;<br>        file &quot;named.ca&quot;;<br>&#125;;<br><br>zone &quot;xiaohexie.org&quot; &#123;<br>        type master;<br>        file &quot;xiaohexie.org.zone.bj&quot;;<br>&#125;;<br><br><br><br><br>vim /etc/named.rfc1912.zones.sh<br>zone &quot;.&quot; IN &#123;<br>        type hint;<br>        file &quot;named.ca&quot;;<br>&#125;;<br><br>zone &quot;xiaohexie.org&quot; &#123;<br>        type master;<br>        file &quot;xiaohexie.org.zone.sh&quot;;<br>&#125;;<br><br><br>chgrp named /etc/named.rfc1912.zones.*<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-4-3-4-创建区域数据库文件"><a href="#9-4-3-4-创建区域数据库文件" class="headerlink" title="9.4.3.4 创建区域数据库文件"></a>9.4.3.4 创建区域数据库文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /var/named/xiaohexie.org.zone.bj<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  master admin.xiaohexie.org. (<br>                                        20230818        ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>                NS      master<br>master          A       10.0.0.4<br>www				A		10.0.0.129<br>www             A       1.1.1.1<br><br><br>vim /var/named/xiaohexie.org.zone.sh<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  master admin.xiaohexie.org. (<br>                                        20230818        ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>                NS      master<br>master          A       10.0.0.4<br>www				A		192.168.0.2<br>www             A       2.2.2.2<br><br><br>chgrp named /var/named/xiaohexie.org.zone.*<br><br>systemctl start named    		#第一次启动服务<br>rndc reload						#不是第一此启动服务<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-4-3-5-实现位于不同区域的两个web服务器"><a href="#9-4-3-5-实现位于不同区域的两个web服务器" class="headerlink" title="9.4.3.5 实现位于不同区域的两个web服务器"></a>9.4.3.5 实现位于不同区域的两个web服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#分别在两台不同的主机上安装http服务</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在web服务器1： 10.0.0.129实现</span><br>yum install httpd <br>echo xiaohexie.shanghai 10.0.0.129 &gt; /var/www/html/index.html<br>systemctl start httpd<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在web服务器2： 192.168.0.2实现</span><br>yum install httpd <br>echo welcome xiaohexie 192.168.0.2 &gt; /var/www/html/index.html<br>systemctl start httpd<br></code></pre></td></tr></table></figure>
+
+<h3 id="9-4-3-6-客户端测试"><a href="#9-4-3-6-客户端测试" class="headerlink" title="9.4.3.6 客户端测试"></a>9.4.3.6 客户端测试</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#分别在两台主机上访问</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">DNS客户端1：192.168.0.100实现，DNS指向192.168.0.1</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">DNS客户端2：10.0.0.200实现，DNS指向10.0.0.4</span><br></code></pre></td></tr></table></figure>
+
+<p>#DNS客户端1：192.168.0.100验证结果：</p>
+<p><img src="image-20230822010407262-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230822010407262"></p>
+<p>#DNS客户端2：10.0.0.200主机上验证结果：</p>
+<p><img src="image-20230822010450054-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230822010450054"></p>
+<h1 id="10-DNS排错"><a href="#10-DNS排错" class="headerlink" title="10 DNS排错"></a>10 DNS排错</h1><p><img src="image-20230823171703595.png" srcset="/img/loading.gif" lazyload alt="image-20230823171703595"></p>
+<h1 id="11-实战案例：综合案例实现Internet的DNS服务架构"><a href="#11-实战案例：综合案例实现Internet的DNS服务架构" class="headerlink" title="11 实战案例：综合案例实现Internet的DNS服务架构"></a>11 实战案例：综合案例实现Internet的DNS服务架构</h1><h2 id="11-1-实验目的"><a href="#11-1-实验目的" class="headerlink" title="11.1 实验目的"></a>11.1 实验目的</h2><p><img src="image-20230818215004688-1692783730240.png" srcset="/img/loading.gif" lazyload alt="image-20230818215004688"></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">搭建DNS实现internet dns架构<br></code></pre></td></tr></table></figure>
+
+<h2 id="11-2-环境要求"><a href="#11-2-环境要求" class="headerlink" title="11.2 环境要求"></a>11.2 环境要求</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs http">需要8台主机<br>1、DNS客户端：10.0.0.100<br>2、本地DNS服务器（只缓存）：10.0.0.7<br>3、转发目标DNS服务器：10.0.0.6<br>4、根DNS服务器：10.0.0.129<br>5、org域DNS服务器：10.0.0.128<br>6、xiaohexie.org 域主DNS服务器：10.0.0.3<br>7、xiaohexie.org 域从DNS服务器：10.0.0.4<br>8、www.xiaohexie.org   web服务器：10.0.0.5<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="11-3-前提准备"><a href="#11-3-前提准备" class="headerlink" title="11.3 前提准备"></a>11.3 前提准备</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http">#关闭selinux<br>getenfore<br>#关闭防火墙<br>systemctl disable --now firewalld<br>时间同步<br></code></pre></td></tr></table></figure>
+
+<h2 id="11-4-实现步骤"><a href="#11-4-实现步骤" class="headerlink" title="11.4 实现步骤"></a>11.4 实现步骤</h2><h3 id="11-4-1-各种主机的网络配置和初始环境准备"><a href="#11-4-1-各种主机的网络配置和初始环境准备" class="headerlink" title="11.4.1 各种主机的网络配置和初始环境准备"></a>11.4.1 各种主机的网络配置和初始环境准备</h3><p>网络配置：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">略<br></code></pre></td></tr></table></figure>
+
+<p>初始配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">关闭防火墙</span><br>systemctl status firewalld ;systemctl stop firewalld ;systemctl disable firewalld<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">关闭selinux</span><br>getenforce ; sed -i  &#x27;/^SELINUX=enforcing/c SELINUX=Disabled&#x27;  /etc/selinux/config<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">开启时钟同步</span><br>yum install -y chrony; systemctl enable --now chronyd<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装<span class="hljs-built_in">bind</span></span><br>yum -y install bind <br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-2-实现web服务"><a href="#11-4-2-实现web服务" class="headerlink" title="11.4.2 实现web服务"></a>11.4.2 实现web服务</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在web服务器：10.0.0.100实现</span><br>yum install -y httpd<br>echo www.xiaoehxie.org &gt; /var/www/html/index.html<br>systemctl restart httpd<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-3-实现xiaohexie-org域的主DNS服务器"><a href="#11-4-3-实现xiaohexie-org域的主DNS服务器" class="headerlink" title="11.4.3 实现xiaohexie.org域的主DNS服务器"></a>11.4.3 实现xiaohexie.org域的主DNS服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在域主DNS服务器：10.0.0.3上</span><br>yum -y install bind<br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉下面两行</span><br>options &#123;<br>//      listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//      allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">只允许这台主机进行区域传输</span><br>		allow-transfer &#123; 10.0.0.4;&#125;;<br><br>vim /etc/named.rfc1912.zones<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加以下内容</span><br>zone &quot;xiaohexie.org&quot; &#123;<br>        type master;<br>        file &quot;xiaohexie.org.zone&quot;;<br>&#125;;<br><br><br><br><br>vim /var/named/xiaohexie.org.zone<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN SOA  master admin.xiaohexie.org. (<br>                                        20230818        ; serial<br>                                        1D      ; refresh<br>                                        1H      ; retry<br>                                        1W      ; expire<br>                                        3H )    ; minimum<br>                NS      master<br>                NS      slave<br>master          A       192.168.157.153<br>slave           A       192.168.157.146<br>www             A       192.168.157.155<br><br><br>named-checkconf <br>named-checkzone xiaohexie.org /var/named/xiaohexie.org.zone <br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-4-实现xiaohexie-org域的从DNS服务器配置"><a href="#11-4-4-实现xiaohexie-org域的从DNS服务器配置" class="headerlink" title="11.4.4 实现xiaohexie.org域的从DNS服务器配置"></a>11.4.4 实现xiaohexie.org域的从DNS服务器配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在域主DNS服务器：10.0.0.4上</span><br>yum -y install bind<br><br>vim /etc/named.conf<br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">不允许其他主机进行区域传输</span><br>    allow-transfer &#123; none;&#125;;<br><br><br>vim /etc/named.rfc1912.zones<br>zone &quot;xiaohexie.org&quot; &#123;<br>    type slave;<br>    masters &#123; 10.0.0.3;&#125;;<br>    file &quot;slaves/xiaohexie.org.slave&quot;;<br>&#125;;<br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br>ls /var/named/slaves/xiaohexie.org.slave 查看区域数据库文件是否生成<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-5-实现org域的主DNS服务器"><a href="#11-4-5-实现org域的主DNS服务器" class="headerlink" title="11.4.5 实现org域的主DNS服务器"></a>11.4.5 实现org域的主DNS服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在org域的主DNS服务器10.0.0.128 上实现</span><br>yum -y install bind <br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉两行</span><br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><br><br>vim /etc/named.rfc1912.zones<br>zone &quot;org&quot; &#123;<br>        type master;<br>        file &quot;org.zone&quot;;<br>&#125;;<br><br><br><br>vim /var/named/org.zone<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN      SOA     master  admin.xiaohexie.org. (<br>                                20230826        ;       serial<br>                                300     ;       refresh<br>                                10M     ;       retry<br>                                1W      ;       expire<br>                                3H      )       ; minimum<br>                NS      master<br>xiaohexie       NS      xiaohexiens1<br>xiaoheixe       NS      xiaohexiens2<br>master          A       10.0.0.128<br>xiaohexiens1    A       10.0.0.3<br>xiaohexiens2    A       10.0.0.4<br><br>chgrp named /var/named/org.zone <br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="11-4-6-实现根域的主DNS服务器"><a href="#11-4-6-实现根域的主DNS服务器" class="headerlink" title="11.4.6 实现根域的主DNS服务器"></a>11.4.6 实现根域的主DNS服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在org域的主DNS服务器10.0.0.128 上实现</span><br>yum -y install bind <br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉两行</span><br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><br><br>vim /etc/named.rfc1912.zones<br>zone &quot;.&quot; IN &#123;<br>        type master;<br>        file &quot;root.zone&quot;;<br>&#125;;<br><br><br><br>vim /var/named/org.zone<br><span class="hljs-meta prompt_">$</span><span class="language-bash">TTL 1D</span><br>@       IN      SOA     master  admin.xiaohexie.org. (<br>                                20230826        ;       serial<br>                                300     ;       refresh<br>                                10M     ;       retry<br>                                1W      ;       expire<br>                                3H      )       ; minimum<br>                NS      master<br>org             NS      orgns<br>master          A       10.0.0.129<br>orgns           A       10.0.0.128<br><br><br>chgrp named /var/named/root.zone<br>chmod 640 /var/named/root.zone<br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="11-4-7-实现转发目标的DNS服务器"><a href="#11-4-7-实现转发目标的DNS服务器" class="headerlink" title="11.4.7 实现转发目标的DNS服务器"></a>11.4.7 实现转发目标的DNS服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在转发目标的DNS服务器10.0.0.6 上实现</span><br>yum -y install bind <br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉两行</span><br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改以下两行</span>    <br>    dnssec-enable no;<br>    dnssec-validation no;<br><br><br>vim /var/named/named.ca<br>.           518400  IN  NS  a.root-servers.net.<br>a.root-servers.net. 518400  IN  A   10.0.0.129<br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-8-实现本地只缓存DNS服务器"><a href="#11-4-8-实现本地只缓存DNS服务器" class="headerlink" title="11.4.8 实现本地只缓存DNS服务器"></a>11.4.8 实现本地只缓存DNS服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在本地缓存的DNS服务器10.0.0.10 上实现</span><br>yum -y install bind <br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注释掉两行</span><br>//  listen-on port 53 &#123; 127.0.0.1; &#125;;<br>//  allow-query     &#123; localhost; &#125;;<br><br>vim /etc/named.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改以下两行</span>    <br>    dnssec-enable no;<br>    dnssec-validation no;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加以下两行</span><br>    forward only;<br>    forwarders      &#123; 10.0.0.6;&#125;;<br><br><br><br><br>systemctl start  named   #第一次启动服务<br>rndc  reload             #不是第一次启动服务<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-9-客户端测试"><a href="#11-4-9-客户端测试" class="headerlink" title="11.4.9 客户端测试"></a>11.4.9 客户端测试</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@localhost ~]# cat /etc/resolv.conf <br><span class="hljs-meta prompt_"># </span><span class="language-bash">Generated by NetworkManager</span><br>nameserver 10.0.0.10<br>[root@localhost ~]# dig www.xiaohexie.org<br><br>; &lt;&lt;&gt;&gt; DiG 9.11.4-P2-RedHat-9.11.4-26.P2.el7_9.14 &lt;&lt;&gt;&gt; www.xiaohexie.org<br>;; global options: +cmd<br>;; Got answer:<br>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55049<br>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 1, ADDITIONAL: 2<br><br>;; OPT PSEUDOSECTION:<br>; EDNS: version: 0, flags:; udp: 4096<br>;; QUESTION SECTION:<br>;www.xiaohexie.org.		IN	A<br><br>;; ANSWER SECTION:<br>www.xiaohexie.org.	86400	IN	A	11.11.2.2<br>www.xiaohexie.org.	86400	IN	A	10.0.0.5<br><br>;; AUTHORITY SECTION:<br>xiaohexie.org.		86400	IN	NS	xiaohexiens1.org.<br><br>;; ADDITIONAL SECTION:<br>xiaohexiens1.org.	86400	IN	A	10.0.0.3<br><br>;; Query time: 935 msec<br>;; SERVER: 10.0.0.10#53(10.0.0.10)<br>;; WHEN: Wed Aug 23 20:46:43 CST 2023<br>;; MSG SIZE  rcvd: 121<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="12-面试题"><a href="#12-面试题" class="headerlink" title="12 面试题"></a>12 面试题</h1><ol>
+<li>DNS工作原理</li>
+<li>递归和迭代查询的区别</li>
+<li>DNS什么时候使用端口号53/TCP 和53/UDP</li>
+<li>CDN工作原理</li>
+<li>上家公司域名解析是怎么解析的，哪个平台解析的</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/03/%E7%AC%AC6%E5%91%A8%E4%BD%9C%E4%B8%9A/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">第6周作业</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/08/%E7%AC%AC%E4%BA%94%E5%91%A8%E4%BD%9C%E4%B8%9A/">
+                        <span class="hidden-mobile">第五周作业</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
